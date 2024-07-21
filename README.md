@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+## Prisma 
+npx prisma init
+npx prisma generate
+npx prisma migrate dev --name initial-migration
+npm run seed
+
+## MUI 5 
+using mui 5 on project
 First, run the development server:
 
 ```bash
