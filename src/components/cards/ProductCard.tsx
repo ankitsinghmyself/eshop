@@ -130,12 +130,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
             ${discountedPrice.toFixed(2)}
           </Typography>
         </Box>
-        <Typography variant="body2" align="center">
+        {/* <Typography variant="body2" align="center">
           Rating:{" "}
           {Array.from({ length: rating }, (_, index) => (
             <StarIcon key={index} color="primary" />
           ))}
-        </Typography>
+        </Typography> */}
       </CardContent>
       <CardActions sx={{ justifyContent: "center", gap: "8px" }}>
         <IconButton

@@ -1,5 +1,6 @@
 "use client";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/navigation/Navbar";
 import ProductsList from "@/components/products/ProductsList";
 import { createTheme, Grid, ThemeProvider } from "@mui/material";
 export default function Home() {
@@ -31,7 +32,8 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme} 
     >
-      <div style={{ padding: "2rem" }} 
+      <Navbar />
+      <div style={{ padding: "6rem 2rem" }} 
       >
         <ProductsList />
       </div>
