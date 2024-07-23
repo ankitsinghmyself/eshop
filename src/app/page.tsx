@@ -1,8 +1,11 @@
 "use client";
+import Cart from "@/components/cart/Cart";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navigation/Navbar";
 import ProductsList from "@/components/products/ProductsList";
+import store from "@/utils/redux/store";
 import { createTheme, Grid, ThemeProvider } from "@mui/material";
+import { Provider } from "react-redux";
 export default function Home() {
   const theme = createTheme({
     palette: {
@@ -30,14 +33,14 @@ export default function Home() {
     },
   });
   return (
-    <ThemeProvider theme={theme} 
-    >
-      <Navbar />
-      <div style={{ padding: "6rem 2rem" }} 
-      >
-        <ProductsList />
-      </div>
-      <Footer />
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <Navbar />
+        <div style={{ padding: "6rem 2rem" }}>
+          <ProductsList />
+        </div>
+        <Footer />
+      </Provider>
     </ThemeProvider>
   );
 }

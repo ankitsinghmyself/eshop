@@ -12,6 +12,7 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import AddToCart from "../cart/AddToCart";
 
 interface ProductCardProps {
   id: number;
@@ -138,17 +139,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </Typography> */}
       </CardContent>
       <CardActions sx={{ justifyContent: "center", gap: "8px" }}>
-        <IconButton
-          color="primary"
-          onClick={() => {
-            // Handle add to cart
-            console.log("Add to cart for product:", id);
-          }}
-          aria-label="add to cart"
-          size="large"
-        >
-          <AddShoppingCartIcon />
-        </IconButton>
+        <AddToCart data={{ id, name, price, quantity: 1 }} />
         <Button
           variant="contained"
           color="secondary"
