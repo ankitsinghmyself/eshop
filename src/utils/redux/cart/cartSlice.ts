@@ -1,6 +1,6 @@
 // redux/cartSlice.ts
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { RootState } from "../store";
 
 interface CartItem {
   id: number;
