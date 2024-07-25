@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -13,9 +14,11 @@ import Box from "@mui/material/Box";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { selectTotalItems } from "@/utils/redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTotalItems, setCart } from "@/utils/redux/cart/cartSlice";
 import { Badge } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
+import { AppDispatch } from "@/utils/redux/store";
 
 const pages = [
   { name: "Home", href: "/" },
@@ -27,6 +30,8 @@ const pages = [
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const totalItems = useSelector(selectTotalItems);
+  const { data: session } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -35,7 +40,21 @@ export default function Navbar() {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (session?.user) {
+        try {
+          const response = await fetch("/api/cart/get");
+          const data = await response.json();
+          dispatch(setCart(data.items)); // Update Redux store with fetched items
+        } catch (error) {
+          console.error("Error fetching cart items:", error);
+        }
+      }
+    };
 
+    fetchCart();
+  }, [session?.user, dispatch]);
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -65,11 +84,7 @@ export default function Navbar() {
             </Typography>
           </Link>
           <Link href="/cart" passHref>
-            <IconButton
-              size="large"
-              aria-label="cart"
-              color="inherit"
-            >
+            <IconButton size="large" aria-label="cart" color="inherit">
               <Badge badgeContent={totalItems} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
@@ -100,19 +115,32 @@ export default function Navbar() {
               </Button>
             ))}
             <Link href="/cart" passHref>
-              <IconButton
-                size="large"
-                aria-label="cart"
-                color="inherit"
-              >
+              <IconButton size="large" aria-label="cart" color="inherit">
                 <Badge badgeContent={totalItems} color="secondary">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
             </Link>
-            <IconButton size="large" aria-label="login" color="inherit">
-              <LoginIcon />
-            </IconButton>
+            {
+              !session?.user && (
+                <Link href="/signin">
+              <IconButton size="small" aria-label="login" color="inherit">
+                <LoginIcon />Sign In
+              </IconButton>
+            </Link>
+              )
+            }
+            {
+              session?.user && (
+                <Button
+                  onClick={() => signOut()}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  Sign Out
+                </Button>
+              )
+            }
+            
           </Box>
         </Box>
         <Drawer
