@@ -31,17 +31,13 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
       }
     },
-    removeItem: (state, action: PayloadAction<number>) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload
-      );
+    removeOrDecrementItem: (state, action: PayloadAction<number>) => {
+      const existingItem = state.items.find(item => item.id === action.payload);
       if (existingItem) {
         if (existingItem.quantity > 1) {
           existingItem.quantity -= 1;
         } else {
-          state.items = state.items.filter(
-            (item) => item.id !== action.payload
-          );
+          state.items = state.items.filter(item => item.id !== action.payload);
         }
       }
     },
@@ -57,5 +53,5 @@ export const selectTotalItems = createSelector(
   (state: RootState) => state.cart.items,
   (items) => items.reduce((total, item) => total + item.quantity, 0)
 );
-export const { addItem, removeItem, clearCart, setCart } = cartSlice.actions;
+export const { addItem, removeOrDecrementItem, clearCart, setCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -50,6 +50,7 @@ model User {
   updatedAt DateTime @updatedAt
   Profile   Profile?
   Cart      Cart[]
+  orders    Order[]
 }
 
 model Account {
@@ -117,4 +118,12 @@ model Cart {
   items  Json
   user   User     @relation(fields: [userId], references: [id])
 
+}
+model Order {
+  id       Int    @id @default(autoincrement())
+  address  String
+  items    Json   // Stores items in JSON format
+  createdAt DateTime @default(now())
+  userId   String 
+  user     User   @relation(fields: [userId], references: [id])
 }

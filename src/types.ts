@@ -14,3 +14,15 @@ export interface CartItem {
       quantity: number;
     };
   }
+
+export interface UserAddress {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+export interface OrderPayload {
+  items: CartItem[]; // Array of items in the order
+  address: string;   // Address for the order
+}

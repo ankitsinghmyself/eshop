@@ -18,13 +18,13 @@ const Footer: React.FC = () => {
         © {new Date().getFullYear()} eshop. All rights reserved.
       </Typography>
       <Box sx={{ textAlign: 'center', mt: 1 }}>
-        <Link href="/privacy-policy" color="inherit" sx={{ mx: 1 }}>
+        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
           Privacy Policy
         </Link>
-        <Link href="/terms-of-service" color="inherit" sx={{ mx: 1 }}>
+        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
           Terms of Service
         </Link>
-        <Link href="/contact" color="inherit" sx={{ mx: 1 }}>
+        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
           Contact
         </Link>
       </Box>

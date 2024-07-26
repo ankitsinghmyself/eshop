@@ -22,9 +22,9 @@ import { AppDispatch } from "@/utils/redux/store";
 
 const pages = [
   { name: "Home", href: "/" },
-  { name: "Products", href: "/products" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  // { name: "Products", href: "/products" },
+  // { name: "About", href: "/about" },
+  // { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
