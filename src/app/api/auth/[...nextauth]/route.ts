@@ -10,6 +10,12 @@ const prisma = new PrismaClient();
 
 interface CustomUser extends User {
   id: string;
+  isAdmin: boolean;
+}
+
+interface CustomToken {
+  id?: string;
+  isAdmin?: boolean;
 }
 
 const authOptions: NextAuthOptions = {
@@ -47,13 +53,18 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = (user as PrismaUser).id;
+        token.isAdmin = (user as PrismaUser).isAdmin;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token && typeof token.id === 'string') {
-        (session.user as CustomUser).id = token.id;
+      const typedToken = token as CustomToken;
+      if (typedToken && typeof typedToken.id === 'string') {
+        (session.user as CustomUser).id = typedToken.id;
       }
+      // Provide a default value of false if token.isAdmin is undefined
+      (session.user as CustomUser).isAdmin = typedToken.isAdmin ?? false;
+
       return session;
     },
   },

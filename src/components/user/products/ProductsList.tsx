@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../cards/ProductCard";
 import { Grid } from "@mui/material";
-import LoadingSpinner from "../loaders/LoadingSpinner";
+import LoadingSpinner from "../../common/loaders/LoadingSpinner";
 
 interface Product {
   id: number;

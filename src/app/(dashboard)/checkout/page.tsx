@@ -103,6 +103,10 @@ export default function Checkout() {
           </Grid>
         </Grid>
       </form>
+      {/* Add payment gateway integration */}
+      {/* Add shipping options */}
+
+      
     </Container>
   );
 }
