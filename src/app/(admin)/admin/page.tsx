@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from 'react';
 import { Box, Toolbar } from '@mui/material';
-import AdminDashboard from '@/components/admin/dashboard/AdminDashboard';
-import ManageUsers from '@/components/admin/users/ManageUsers';
-import Sidebar from '@/components/admin/navigation/Sidebar';
+import AdminDashboard from '@/components/admin/adminDashboard/AdminDashboard';
+import Sidebar from '@/components/admin/adminSidebar/Sidebar';
 import ManageProduct from '@/components/admin/manageProduct/ManageProduct';
+import ManageUsers from '@/components/admin/manageUsers/ManageUsers';
 
 export default function AdminPage() {
   const [selectedItem, setSelectedItem] = useState('Dashboard');
