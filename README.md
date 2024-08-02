@@ -11,7 +11,8 @@ npm run seed
 ## MUI 5 
 using mui 5 on project
 First, run the development server:
-
+## charts 
+react-chartjs-2 chart.js
 ```bash
 npm run dev
 # or

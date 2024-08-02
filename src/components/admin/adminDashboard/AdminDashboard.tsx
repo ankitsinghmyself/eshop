@@ -1,5 +1,6 @@
 import CircularChart from '@/components/common/charts/CircularChart';
 import { getActiveProducts, getTotalProducts } from '@/lib/productService';
+import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 const AdminDashboard: React.FC = () => {
@@ -19,8 +20,12 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
-      <CircularChart activeProducts={activeProducts} totalProducts={totalProducts} />
+      {/* <h1>Admin Dashboard</h1> */}
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <CircularChart activeProducts={activeProducts} totalProducts={totalProducts} />
+        </Grid>
+      </Grid>
     </div>
   );
 };

@@ -20,9 +20,10 @@ model Products {
   img       String
   quantity  Int
   favorite  Boolean  @default(false)
-  rating    Int
+  rating    Int      @default(0)
   published Boolean  @default(false)
-  authorId  Int
+  authorId  String?
+  isActive  Boolean @default(true)
 }
 
 model Profile {
