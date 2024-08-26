@@ -1,10 +1,10 @@
 import NextAuth, { NextAuthOptions, User } from 'next-auth';
-import { NextApiHandler } from 'next';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
+import { NextRequest } from 'next/server';
 
 const prisma = new PrismaClient();
 
@@ -62,7 +62,6 @@ const authOptions: NextAuthOptions = {
       if (typedToken && typeof typedToken.id === 'string') {
         (session.user as CustomUser).id = typedToken.id;
       }
-      // Provide a default value of false if token.isAdmin is undefined
       (session.user as CustomUser).isAdmin = typedToken.isAdmin ?? false;
 
       return session;
@@ -71,6 +70,12 @@ const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
+export async function GET(req: NextRequest) {
+  const response = await NextAuth(authOptions);
+  return response;
+}
 
-export { authHandler as GET, authHandler as POST };
+export async function POST(req: NextRequest) {
+  const response = await NextAuth(authOptions);
+  return response;
+}

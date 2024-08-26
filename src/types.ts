@@ -16,6 +16,7 @@ export interface CartItem {
   }
 
 export interface UserAddress {
+  pinCode: any;
   street: string;
   city: string;
   state: string;

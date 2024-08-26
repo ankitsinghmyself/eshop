@@ -67,8 +67,8 @@ export async function POST(req: NextRequest) {
     // Upsert the cart
     const cart = await prisma.cart.upsert({
       where: { userId },
-      update: { items: updatedItems },
-      create: { userId, items: updatedItems },
+      update: { items: JSON.stringify(updatedItems) },
+      create: { userId, items: JSON.stringify(updatedItems) },
     });
 
     return NextResponse.json(cart, { status: 200 });

@@ -18,11 +18,11 @@ export async function getActiveProducts(): Promise<number> {
 export async function getProducts() {
   return await prisma.products.findMany();
 }
-export async function addProduct(data: { name: string; details: string; price: number; img: string; quantity: number; isActive: boolean; authorId: number }) {
+export async function addProduct(data: { name: string; details: string; price: number; img: string; quantity: number; isActive: boolean; authorId: string }) {
   return await prisma.products.create({ data });
 }
 
-export async function updateProduct(id: number, data: { name: string; details: string; price: number; img: string; quantity: number; isActive: boolean; authorId: number }) {
+export async function updateProduct(id: string, data: { name: string; details: string; price: number; img: string; quantity: number; isActive: boolean; authorId: string }) {
   return await prisma.products.update({
     where: { id },
     data,
@@ -30,7 +30,7 @@ export async function updateProduct(id: number, data: { name: string; details: s
 }
 
 
-export async function deleteProduct(id: number) {
+export async function deleteProduct(id: string) {
   return await prisma.products.delete({
     where: { id },
   });

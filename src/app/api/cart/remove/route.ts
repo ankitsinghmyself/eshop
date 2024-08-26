@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     // Update the cart in the database
     await prisma.cart.update({
       where: { userId },
-      data: { items: updatedItems }, 
+      data: { items: JSON.stringify(updatedItems) }, 
     });
 
     return NextResponse.json({ message: 'Item updated' }, { status: 200 });

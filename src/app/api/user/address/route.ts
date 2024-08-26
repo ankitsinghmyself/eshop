@@ -15,14 +15,14 @@ export async function GET(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { address: true },
+      select: { email: true }, // fix here for logic
     });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ address: user.address }, { status: 200 });
+    return NextResponse.json({ address: user.email }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user address:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

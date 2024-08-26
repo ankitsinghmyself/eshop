@@ -7,12 +7,24 @@ import { saveOrder } from "@/utils/redux/order/orderThunks";
 import { clearCart } from "@/utils/redux/cart/cartSlice";
 import { TextField, Button, Container, Typography, Grid } from "@mui/material";
 
+// Assuming UserAddress is an object with fields like street, city, etc.
+interface UserAddress {
+  street: string;
+  city: string;
+  pinCode: string;
+}
+
 export default function Checkout() {
   const dispatch = useDispatch<AppDispatch>();
   const { items } = useSelector((state: RootState) => state.cart);
   const { address } = useSelector((state: RootState) => state.user);
-  
-  const [newAddress, setNewAddress] = useState<string>(address || "");
+
+  // Assuming `address` could be a string or a `UserAddress` object
+  const initialAddress = typeof address === 'string' 
+    ? address 
+    : address ? `${address.street}, ${address.city}, ${address.pinCode}` : "";
+
+  const [newAddress, setNewAddress] = useState<string>(initialAddress);
   const [city, setCity] = useState<string>("");
   const [pinCode, setPinCode] = useState<string>("");
 
@@ -105,8 +117,6 @@ export default function Checkout() {
       </form>
       {/* Add payment gateway integration */}
       {/* Add shipping options */}
-
-      
     </Container>
   );
 }

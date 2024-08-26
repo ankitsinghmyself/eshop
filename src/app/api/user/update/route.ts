@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     // Update user address in the database
     await prisma.user.update({
       where: { id: userId },
-      data: { address },
+      data: { email: address }, //fix here
     });
 
     return NextResponse.json({ message: 'Address updated' }, { status: 200 });

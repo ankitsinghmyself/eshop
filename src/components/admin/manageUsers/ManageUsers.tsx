@@ -13,15 +13,19 @@ import {
   Checkbox,
   Grid,
 } from "@mui/material";
-import { getUsers, addUser, updateUser, deleteUser } from "@/lib/userService"; // Implement these functions
+import { getUsers, addUser, updateUser, deleteUser } from "@/lib/userService";
 
 interface User {
   id: string;
-  name?: string;
-  username?: string;
-  email?: string;
-  password?: string;
+  name: string;
+  username: string;
+  email: string;
+  password: string;
   isAdmin: boolean;
+  emailVerified?: Date | null;
+  image?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const ManageUsers: React.FC = () => {
@@ -43,38 +47,37 @@ const ManageUsers: React.FC = () => {
   }, []);
 
   const handleAddUser = async () => {
-    const newUser = await addUser({ name, username, email, password, isAdmin });
-    setUsers([...users, newUser]);
-    setName("");
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setIsAdmin(false);
-  };
-
-  const handleUpdateUser = async () => {
-    if (editUserId === null) return;
-    const updatedUser = await updateUser(editUserId, {
+    const newUser = await addUser({
       name,
       username,
       email,
       password,
       isAdmin,
+      emailVerified: null,
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    setUsers(
-      users.map((user) => (user.id === editUserId ? updatedUser : user))
-    );
-    setName("");
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setIsAdmin(false);
-    setEditUserId(null);
+    setUsers([...users, newUser]);
+    resetForm();
   };
 
-  const handleDeleteUser = async (id: string) => {
+  const handleUpdateUser = async () => {
+    if (editUserId === null) return;
+    const updatedUser = await updateUser(parseInt(editUserId, 10), {
+      name,
+      username,
+      email,
+      password,
+      isAdmin,
+      updatedAt: new Date(),
+    });
+    setUsers(users.map((user) => (user.id === editUserId ? updatedUser : user)));
+    resetForm();
+  };
+  const handleDeleteUser = async (id: number) => {
     await deleteUser(id);
-    setUsers(users.filter((user) => user.id !== id));
+    setUsers(users.filter((user) => user.id !== id.toString()));
   };
 
   const handleEditUser = (user: User) => {
@@ -86,13 +89,22 @@ const ManageUsers: React.FC = () => {
     setIsAdmin(user.isAdmin);
   };
 
+  const resetForm = () => {
+    setName("");
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setIsAdmin(false);
+    setEditUserId(null);
+  };
+
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom>
         Manage Users
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={6} sm={6}>
+        <Grid item xs={6}>
           <Box
             component="form"
             sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}
@@ -154,7 +166,7 @@ const ManageUsers: React.FC = () => {
             )}
           </Box>
         </Grid>
-        <Grid item xs={6} sm={6}>
+        <Grid item xs={6}>
           <List>
             {users.map((user) => (
               <ListItem key={user.id} divider>
@@ -165,7 +177,7 @@ const ManageUsers: React.FC = () => {
                   </Button>
                   <Button
                     color="secondary"
-                    onClick={() => handleDeleteUser(user.id)}
+                    onClick={() => handleDeleteUser(Number(user.id))}
                   >
                     Delete
                   </Button>

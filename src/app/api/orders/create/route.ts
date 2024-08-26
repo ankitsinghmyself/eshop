@@ -1,9 +1,16 @@
-// app/api/orders/create/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import { OrderPayload } from '@/types';
+
+// Define the CartItem type based on your schema
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,11 +24,14 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
+    // Convert the items array to a JSON string
+    const itemsJson = JSON.stringify(items);
+
     // Create a new order
     const order = await prisma.order.create({
       data: {
         userId,
-        items,
+        items: itemsJson,  // Store the JSON string in the database
         address,
       },
     });
