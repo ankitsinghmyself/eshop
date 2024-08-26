@@ -6,15 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Products {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @db.VarChar(255)
   details   String?
   price     Float
   img       String
@@ -22,51 +22,53 @@ model Products {
   favorite  Boolean  @default(false)
   rating    Int      @default(0)
   published Boolean  @default(false)
-  authorId  String?  @db.ObjectId
-  isActive  Boolean  @default(true)
+  authorId  String?
+  isActive  Boolean @default(true)
 }
 
 model Profile {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  id     Int     @id @default(autoincrement())
   bio    String?
-  userId String  @unique @db.ObjectId
   user   User    @relation(fields: [userId], references: [id])
+  userId String  @unique
 }
 
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String          @id @default(cuid())
   name          String?
-  username      String?  @unique
-  email         String?  @unique
+  username      String?         @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
-  password      String
-  isAdmin       Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  Profile       Profile?
-  Cart          Cart[]
-  orders        Order[]
   Session       Session[]
-  Account       Account[]
+  Account       Account?
+  password      String
+  isAdmin       Boolean @default(false)
+  // Optional for WebAuthn support
   Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Profile   Profile?
+  Cart      Cart[]
+  orders    Order[]
 }
 
 model Account {
-  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId                   String  @db.ObjectId 
+  id                       String  @id @default(cuid())
+  userId                   String  @unique
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String?
-  access_token             String?
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String?
+  id_token                 String? @db.Text
   session_state            String?
   refresh_token_expires_in Int?
-  user                     User    @relation(fields: [userId], references: [id])
+  user                     User?   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -76,9 +78,9 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
 
@@ -89,7 +91,6 @@ model Session {
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
   token      String
   expires    DateTime
@@ -97,10 +98,10 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
   credentialID         String  @unique
-  userId               String  @db.ObjectId
+  userId               String
   providerAccountId    String
   credentialPublicKey  String
   counter              Int
@@ -109,21 +110,21 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
-
-
 model Cart {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @unique @db.ObjectId
+  id     Int    @id @default(autoincrement())
+  userId String @unique
   items  Json
-  user   User   @relation(fields: [userId], references: [id])
-}
+  user   User     @relation(fields: [userId], references: [id])
 
+}
 model Order {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  address   String
-  items     Json
+  id       Int    @id @default(autoincrement())
+  address  String
+  items    Json   // Stores items in JSON format
   createdAt DateTime @default(now())
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
+  userId   String 
+  user     User   @relation(fields: [userId], references: [id])
 }

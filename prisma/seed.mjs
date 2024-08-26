@@ -14,7 +14,7 @@ async function main() {
         favorite: true,
         rating: 5,
         published: true,
-        authorId: 1,
+        authorId: '64f8fa9a02c3d9144bdb75f5',
       },
       {
         name: 'Product 2',
@@ -25,7 +25,7 @@ async function main() {
         favorite: false,
         rating: 4,
         published: false,
-        authorId: 1,
+        authorId: '64f8fa9a02c3d9144bdb75f5',
       },
       {
         name: 'Product 3',
@@ -36,7 +36,7 @@ async function main() {
         favorite: true,
         rating: 3,
         published: true,
-        authorId: 2,
+        authorId: '64f8fa9a02c3d9144bdb75f5',
       },
     ],
   });
