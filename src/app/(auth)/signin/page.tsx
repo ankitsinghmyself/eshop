@@ -106,7 +106,7 @@ export default function SignIn() {
         Sign In with Google
       </Button>
       <Typography sx={{ mt: 2 }}>
-        Don't have an account? <Link href="/signup">Sign up here</Link>
+        Don&apos;t have an account? <Link href="/signup">Sign up here</Link>
       </Typography>
     </Box>
   );
