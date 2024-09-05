@@ -10,10 +10,9 @@ interface JwtPayload {
 }
 
 export async function middleware(req: NextRequest) {
-  // Extract the pathname of the request
   const { pathname } = req.nextUrl;
 
-  // Skip middleware for certain paths (e.g., public pages and API routes)
+  // Skip middleware for certain paths
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/signin") ||
@@ -21,7 +20,6 @@ export async function middleware(req: NextRequest) {
     pathname === "/" ||
     pathname === "/cart" ||
     pathname.startsWith('/_next/static/')
-
   ) {
     return NextResponse.next();
   }
@@ -36,7 +34,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Get the token value
   const token = authHeader.substring(7); // Remove 'Bearer ' from the start
 
   try {
