@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run prisma-build && next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "node prisma/seed.mjs"
+    "seed": "node prisma/seed.mjs",
+    "prisma-build": "prisma generate"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
