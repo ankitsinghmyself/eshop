@@ -4,7 +4,6 @@ import Navbar from "@/components/user/navigation/Navbar";
 import store from "@/utils/redux/store";
 import { createTheme, ThemeProvider } from "@mui/material";
 
-import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 
@@ -40,11 +39,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         <div className="z-[99999]">
           <Toaster position="top-center" reverseOrder={false} />
         </div>
-        <SessionProvider>
           <Navbar />
             {children} 
           <Footer />
-        </SessionProvider>
       </Provider>
     </ThemeProvider>
   );

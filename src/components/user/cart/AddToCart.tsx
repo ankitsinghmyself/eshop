@@ -1,17 +1,14 @@
-// components/AddToCart.tsx
 import React from "react";
 import { useDispatch } from "react-redux";
 import { addItem } from "@/utils/redux/cart/cartSlice";
 import { IconButton } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { AddToCartProps } from "@/types";
-import { useSession } from "next-auth/react";
-import { saveCartItems } from "@/utils/redux/cart/cartThunks";
-import { AppDispatch } from "@/utils/redux/store";
+// Removed: import { saveCartItems } from "@/utils/redux/cart/cartThunks";
+// Removed: import { AppDispatch } from "@/utils/redux/store";
 
 const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { data: session } = useSession();
+  const dispatch = useDispatch();
 
   const addItemToCart = () => {
     const newItem = {
@@ -24,10 +21,8 @@ const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
     // Add item to local cart state
     dispatch(addItem(newItem));
 
-    // If user is authenticated, save the cart items to the server
-    if (session?.user) {
-      dispatch(saveCartItems([newItem]));
-    }
+    // If you need to handle saving cart items to the server, you can add that logic here
+    // For example, you can use an effect or a separate function to handle server communication
   };
 
   return (

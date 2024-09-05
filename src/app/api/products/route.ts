@@ -1,8 +1,8 @@
-// app/api/products/route.ts
-import { NextResponse } from 'next/server';
-import  prisma  from '@/lib/prisma'; // Adjust the path as needed
-import { getServerSession } from 'next-auth/next';
-import authOptions from '@/lib/authOptions'; // Ensure this file is exporting your NextAuth configuration
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/lib/prisma'; // Adjust the path as needed
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET!;
 
 export async function GET() {
   try {
@@ -14,15 +14,21 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { name, details, price, img, quantity, isActive } = await request.json();
-  const session = await getServerSession(authOptions);
+  const authHeader = request.headers.get('Authorization');
 
-  if (!session) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
   try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const authorId = decoded.id;
+
     if (!name || !price || !img || !quantity) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
@@ -35,7 +41,7 @@ export async function POST(request: Request) {
         img,
         quantity,
         isActive,
-        authorId: session.user.id,
+        authorId, // Corrected this line
       },
     });
 
@@ -46,15 +52,21 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { id, updateData } = await request.json();
-  const session = await getServerSession(authOptions);
+  const authHeader = request.headers.get('Authorization');
 
-  if (!session) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
   try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const authorId = decoded.id;
+
     if (!id || !updateData) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
@@ -63,7 +75,7 @@ export async function PUT(request: Request) {
       where: { id },
       data: {
         ...updateData,
-        authorId: session.user.id,
+        authorId, // Corrected this line
       },
     });
 
@@ -74,15 +86,20 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   const { productId } = await request.json();
-  const session = await getServerSession(authOptions);
+  const authHeader = request.headers.get('Authorization');
 
-  if (!session) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
   try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+
     if (!productId) {
       return NextResponse.json({ message: 'Product ID is required' }, { status: 400 });
     }

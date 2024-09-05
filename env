@@ -14,4 +14,4 @@ DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
-NEXTAUTH_SECRET="your-nextauth-secret"
+JWT_SECRET="your-nextauth-secret"

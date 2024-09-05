@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import  prisma  from '@/lib/prisma'; // Adjust the path as needed
-import { getServerSession } from 'next-auth/next';
-import authOptions from '@/lib/authOptions'; // Ensure this file is exporting your NextAuth configuration
+import prisma from '@/lib/prisma';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+
+const SECRET_KEY = process.env.JWT_SECRET!;
 
 export async function GET() {
   try {
@@ -16,13 +17,19 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const { name, username, email, password, isAdmin } = await request.json();
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
+  
+  // Extract the token from the Authorization header
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
   try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+
     if (!name || !username || !email || !password) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
@@ -46,16 +53,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
-
 export async function PUT(request: Request) {
   const { id, name, username, email, password, isAdmin } = await request.json();
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
+  
+  // Extract the token from the Authorization header
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
   try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const authorId = decoded.id;
+
     if (!id) {
       return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
     }
@@ -68,7 +81,10 @@ export async function PUT(request: Request) {
 
     const updatedUser = await prisma.user.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        authorId,
+      },
     });
 
     return NextResponse.json(updatedUser);
@@ -79,26 +95,32 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-    const { id } = await request.json();
-    const session = await getServerSession(authOptions);
+  const { id } = await request.json();
   
-    if (!session) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-  
-    try {
-      if (!id) {
-        return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
-      }
-  
-      await prisma.user.delete({
-        where: { id },
-      });
-  
-      // Send a response with no content
-      return new NextResponse(null, { status: 204 });
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
-    }
+  // Extract the token from the Authorization header
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
+
+  const token = authHeader.split(' ')[1]; // Extract the token from the header
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const authorId = decoded.id;
+
+    if (!id) {
+      return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
+    }
+
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}

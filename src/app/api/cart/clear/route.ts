@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next'; // Use getServerSession for NextAuth
-import prisma from '@/lib/prisma';
-import authOptions from '@/lib/authOptions'; // Import authOptions correctly
+import prisma from '@/lib/prisma'; // Ensure this points to your Prisma client instance
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET!; // Ensure this is set in your environment variables
 
 export async function POST(req: NextRequest) {
   try {
-    // Get the session
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    // Get the token from the request headers
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id; // Ensure 'id' is correct as per your schema
+    const token = authHeader.split(' ')[1]; // Extract the token from the header
+
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const userId = decoded.id;
 
     // Clear the cart
     await prisma.cart.update({

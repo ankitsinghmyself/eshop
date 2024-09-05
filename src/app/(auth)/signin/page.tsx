@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -28,86 +27,84 @@ export default function SignIn() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Sign in using credentials provider
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (result?.ok) {
-      toast.success("Sign in successful!");
-      await handleSaveCart();
-      window.location.href = "/dashboard";
-    } else {
-      toast.error("Sign in failed. Please check your credentials.");
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      console.log(response);
+      const data = await response.json();
+      if (response.ok) {
+        // Assuming the response contains a token
+        localStorage.setItem("token", data.token); // Store token in localStorage
+        toast.success("Sign in successful!");
+        await handleSaveCart();
+        window.location.href = "/dashboard";
+      } else {
+        toast.error(
+          data.message || "Sign in failed. Please check your credentials."
+        );
+      }
+    } catch (error) {
+      console.error("Error during sign in:", error);
+      toast.error("Sign in failed.");
     }
   };
 
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
-    toast.success("Sign in successful!");
-  };
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        mt: 4,
-      }}
-    >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Sign In
-      </Typography>
+    <>
       <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ width: "100%", maxWidth: 400 }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 4,
+        }}
       >
-        <TextField
-          type="email"
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          type="password"
-          label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ mt: 2 }}
-        >
+        <Typography variant="h4" component="h1" gutterBottom>
           Sign In
-        </Button>
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleLoginSubmit}
+          sx={{ width: "100%", maxWidth: 400 }}
+        >
+          <TextField
+            type="email"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Sign In
+          </Button>
+        </Box>
+        <Typography sx={{ mt: 2 }}>
+          Don&apos;t have an account? <Link href="/signup">Sign up here</Link>
+        </Typography>
       </Box>
-      <Button
-        onClick={handleGoogleSignIn}
-        variant="outlined"
-        color="secondary"
-        sx={{ mt: 2 }}
-      >
-        Sign In with Google
-      </Button>
-      <Typography sx={{ mt: 2 }}>
-        Don&apos;t have an account? <Link href="/signup">Sign up here</Link>
-      </Typography>
-    </Box>
+    </>
   );
 }

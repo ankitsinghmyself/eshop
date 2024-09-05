@@ -49,9 +49,12 @@ const cartSlice = createSlice({
     },
   },
 });
+
+// Update the selector to handle undefined state
 export const selectTotalItems = createSelector(
-  (state: RootState) => state.cart.items,
+  (state: RootState) => state.cart.items || [],  // Ensure items is always an array
   (items) => items.reduce((total, item) => total + item.quantity, 0)
 );
+
 export const { addItem, removeOrDecrementItem, clearCart, setCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -1,4 +1,3 @@
-// components/Cart.tsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/utils/redux/store";
@@ -20,8 +19,6 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useSession } from "next-auth/react";
-import { saveCartItems } from "@/utils/redux/cart/cartThunks"; // Import saveCartItems if needed
 import toast from "react-hot-toast";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
@@ -29,49 +26,41 @@ const Cart: React.FC = () => {
   const items = useSelector((state: RootState) => state.cart.items);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch<AppDispatch>();
-  const { data: session } = useSession();
 
   const handleRemoveItem = async (itemId: number) => {
     dispatch(removeOrDecrementItem(itemId));
-    if (session?.user) {
-      try {
-        const response = await fetch("/api/cart/remove", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ itemId }),
-        });
+    try {
+      const response = await fetch("/api/cart/remove", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to update cart");
-        }
-        toast.success("Item updated successfully!");
-      } catch (error) {
-        toast.error("Error updating cart.");
+      if (!response.ok) {
+        throw new Error("Failed to update cart");
       }
+      toast.success("Item updated successfully!");
+    } catch (error) {
+      toast.error("Error updating cart.");
     }
   };
 
   const handleClearCart = async () => {
     dispatch(clearCart());
-    if (session?.user) {
-      try {
-        await fetch("/api/cart/clear", {
-          method: "POST",
-        });
-        dispatch(saveCartItems([]));
-      } catch (error) {
-        console.error("Error clearing cart:", error);
-      }
+    try {
+      await fetch("/api/cart/clear", {
+        method: "POST",
+      });
+    } catch (error) {
+      console.error("Error clearing cart:", error);
     }
   };
-  const handleCheckoutCart = async () => {
-    if (session?.user) {
-     window.location.href = "/checkout";
-    }else{
-      toast.error("Please login to checkout");
-      window.location.href = "/signin";
-    }
-  }
+
+  const handleCheckoutCart = () => {
+    // Redirect to checkout page without authentication check
+    window.location.href = "/checkout";
+  };
+
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -118,7 +107,7 @@ const Cart: React.FC = () => {
             color="primary"
             sx={{ ml: 2 }}
             startIcon={<AddShoppingCartIcon />}
-            onClick={() => handleCheckoutCart()}
+            onClick={handleCheckoutCart}
           >
             Checkout
           </Button>

@@ -1,15 +1,19 @@
 "use client";
 import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Clear previous error message
+    setError("");
+
     const response = await fetch("/api/auth/signup", {
       method: "POST",
       body: JSON.stringify({ email, password }),
@@ -17,12 +21,14 @@ export default function SignUp() {
         "Content-Type": "application/json",
       },
     });
+
     if (response.ok) {
-      // Handle success (e.g., redirect to sign in page)
+      // Redirect to sign in page on success
       window.location.href = "/signin";
     } else {
       // Handle error
-      console.error("Sign up failed");
+      const errorData = await response.json();
+      setError(errorData.message || "Sign up failed");
     }
   };
 
@@ -61,6 +67,11 @@ export default function SignUp() {
           margin="normal"
           required
         />
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
         <Button
           type="submit"
           variant="contained"
@@ -71,14 +82,6 @@ export default function SignUp() {
           Sign Up
         </Button>
       </Box>
-      <Button
-        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-        variant="outlined"
-        color="secondary"
-        sx={{ mt: 2 }}
-      >
-        Sign Up with Google
-      </Button>
       <Typography sx={{ mt: 2 }}>
         Already have an account? <Link href="/signin">Sign In</Link>
       </Typography>

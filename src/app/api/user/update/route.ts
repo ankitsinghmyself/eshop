@@ -1,25 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
-import authOptions from '@/lib/authOptions';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET!;
 
 export async function POST(req: NextRequest) {
   try {
     const { address }: { address: string } = await req.json();
 
-    // Get the session
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    // Extract the token from the Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const token = authHeader.split(' ')[1]; // Extract the token from the header
+
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const userId = decoded.id;
 
     // Update user address in the database
     await prisma.user.update({
       where: { id: userId },
-      data: { email: address }, //fix here
+      data: { email: address }, // Update the user's email address
     });
 
     return NextResponse.json({ message: 'Address updated' }, { status: 200 });

@@ -1,13 +1,32 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Grid, Box, Typography, Button } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        setUser(decoded);
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    setUser(null);
+  };
 
   return (
     <Grid container justifyContent="center" alignItems="center" padding={4}>
-      {session?.user && (
+      {user && (
         <Box
           sx={{
             textAlign: "center",
@@ -17,7 +36,7 @@ export default function Home() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            Welcome, {session.user.name}
+            Welcome, {user.name}
           </Typography>
           <Box
             component="pre"
@@ -30,12 +49,12 @@ export default function Home() {
               mb: 3,
             }}
           >
-            {JSON.stringify(session?.user, null, 2)}
+            {JSON.stringify(user, null, 2)}
           </Box>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => signOut()}
+            onClick={handleLogout}
             sx={{
               backgroundColor: "black",
               "&:hover": {

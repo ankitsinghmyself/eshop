@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
-import authOptions from '@/lib/authOptions';
+import jwt from 'jsonwebtoken';
 import { CartItem } from '@/types';
+
+const SECRET_KEY = process.env.JWT_SECRET!; // Ensure this is set in your environment variables
 
 // Type guard to check if a value is an array of CartItem
 function isCartItemArray(value: any): value is CartItem[] {
@@ -20,14 +21,17 @@ export async function POST(req: NextRequest) {
     // Parse request body
     const { items }: { items: CartItem[] } = await req.json();
 
-    // Get the session
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    // Extract the token from the request headers
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const token = authHeader.split(' ')[1]; // Extract the token from the header
+
+    // Verify the token
+    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const userId = decoded.id;
 
     // Fetch existing cart
     const existingCart = await prisma.cart.findUnique({
