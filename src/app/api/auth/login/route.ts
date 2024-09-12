@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
-const SECRET_KEY = process.env.JWT_SECRET!;
+const SECRET_KEY = process.env.JWT_SECRET;
 
 interface UserWithAdmin {
   id: string;
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       name: "token",
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Secure only in production
+      secure: process.env.NODE_ENV === "production", 
       sameSite: "strict",
       path: "/",
       maxAge: 3600, // 1 hour
