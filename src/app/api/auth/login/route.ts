@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET!;
@@ -10,7 +10,7 @@ interface UserWithAdmin {
   id: string;
   email: string;
   password: string;
-  isAdmin: boolean; 
+  isAdmin: boolean;
 }
 
 export async function POST(req: NextRequest) {
@@ -22,13 +22,16 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ status: 404, message: 'User not found' });
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return NextResponse.json({ status: 401, message: 'Invalid password or email' });
+      return NextResponse.json(
+        { message: "Invalid password or email" },
+        { status: 401 }
+      );
     }
 
     // Type assertion for user to ensure isAdmin exists
@@ -38,14 +41,28 @@ export async function POST(req: NextRequest) {
       {
         id: typedUser.id,
         email: typedUser.email,
-        isAdmin: typedUser.isAdmin, 
+        isAdmin: typedUser.isAdmin,
       },
       SECRET_KEY,
-      { expiresIn: '1h' } 
+      { expiresIn: "1h" }
     );
 
-    return NextResponse.json({ token, message: 'Login successful' }, { status: 200 });
+    const response = NextResponse.json({ message: "Sign in successful!" }, { status: 200 });
+    
+    // Set the token in cookies
+    response.cookies.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Secure only in production
+      sameSite: "strict",
+      path: "/",
+      maxAge: 3600, // 1 hour
+    });
+
+    return response;
   } catch (error) {
-    return NextResponse.json({ error: 'Login failed' }, { status: 500 });
+    console.error("Error during login:", error);
+    return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import { Box, TextField, Button, Typography } from "@mui/material";
-
+import Cookies from 'js-cookie';
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,21 +29,20 @@ export default function SignIn() {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      console.log(response);
+  
       const data = await response.json();
+  
       if (response.ok) {
-        // Assuming the response contains a token
-        localStorage.setItem("token", data.token); // Store token in localStorage
-        toast.success("Sign in successful!");
+        toast.success(data.message);
         await handleSaveCart();
-        window.location.href = "/dashboard";
+        window.location.href = "/dashboard"; 
       } else {
         toast.error(
           data.message || "Sign in failed. Please check your credentials."
@@ -54,6 +53,7 @@ export default function SignIn() {
       toast.error("Sign in failed.");
     }
   };
+  
 
   return (
     <>
