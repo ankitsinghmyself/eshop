@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import { Box, TextField, Button, Typography } from "@mui/material";
-import Cookies from 'js-cookie';
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
