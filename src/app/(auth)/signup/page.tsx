@@ -2,6 +2,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { Box, TextField, Button, Typography } from "@mui/material";
+import toast from "react-hot-toast";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -23,11 +24,13 @@ export default function SignUp() {
     });
 
     if (response.ok) {
-      // Redirect to sign in page on success
+      toast.success("Sign up successful");
       window.location.href = "/signin";
+
     } else {
       // Handle error
       const errorData = await response.json();
+      toast.error(errorData.message || "Sign up failed");
       setError(errorData.message || "Sign up failed");
     }
   };
