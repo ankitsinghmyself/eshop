@@ -1,29 +1,22 @@
-import { useEffect, useState } from 'react';
+// hooks/useAuthCheck.ts
+
+import { useEffect, useState } from "react";
+
 const useAuthCheck = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/check-auth', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        });
-
-        if (response.ok) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
+        const response = await fetch("/api/auth/status");
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
       } catch (error) {
-        console.error('Error checking authentication:', error);
-        setIsAuthenticated(false);
+        console.error("Error checking auth status:", error);
       }
     };
 
-    checkAuth();
+    checkAuthStatus();
   }, []);
 
   return isAuthenticated;

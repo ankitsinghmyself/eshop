@@ -16,6 +16,8 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTotalItems, setCart } from "@/utils/redux/cart/cartSlice";
 import { Badge } from "@mui/material";
+import useAuthCheck from "@/hooks/useAuthCheck"; // Adjust the import path if needed
+import toast from "react-hot-toast";
 
 const pages = [
   { name: "Home", href: "/" },
@@ -28,6 +30,7 @@ export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch();
+  const isAuthenticated = useAuthCheck(); // Use the custom hook
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -42,7 +45,7 @@ export default function Navbar() {
       try {
         const response = await fetch("/api/cart/get");
         const data = await response.json();
-        dispatch(setCart(data.items)); // Update Redux store with fetched items
+        dispatch(setCart(data.items));
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
@@ -50,6 +53,29 @@ export default function Navbar() {
 
     fetchCart();
   }, [dispatch]);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Logged out successfully:", data.message);
+        window.location.href = "/";
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      toast.error("Error during logout.");
+    }
+  };
 
   return (
     <AppBar position="fixed">
@@ -117,13 +143,20 @@ export default function Navbar() {
                 </Badge>
               </IconButton>
             </Link>
-            <Link href="/signin">
+            {isAuthenticated ? (
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
+                onClick={()=>handleLogout()}
               >
-                Sign In
+                Logout
               </Button>
-            </Link>
+            ) : (
+              <Link href="/signin" passHref>
+                <Button sx={{ my: 2, color: "white", display: "block" }}>
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </Box>
         </Box>
         <Drawer
