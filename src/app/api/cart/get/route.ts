@@ -1,20 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { parse } from 'cookie';
 
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET!; // Ensure this is set in your environment variables
 
 export async function GET(req: NextRequest) {
   // Extract the token from the request headers
-  const authHeader = req.headers.get('authorization'); // Note the lowercase 'authorization'
+  const cookies = parse(req.headers.get('cookie') || '');
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    // Handle non-logged-in users by returning an empty cart or a specific message
-    return NextResponse.json({ items: [] }); // or { message: 'Unauthorized', items: [] } if you prefer
+  // Get token from parsed cookies
+  const token = cookies.token;
+
+  // Check if the token exists
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
 
   // Verify the token
   const decoded = jwt.verify(token, SECRET_KEY) as { id: string };

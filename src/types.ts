@@ -1,6 +1,6 @@
 // types.ts
 export interface CartItem {
-    id: number;
+    id: string;
     name: string;
     price: number;
     quantity: number;
@@ -8,7 +8,7 @@ export interface CartItem {
   
   export interface AddToCartProps {
     data: {
-      id: number;
+      id: string;
       name: string;
       price: number;
       quantity: number;

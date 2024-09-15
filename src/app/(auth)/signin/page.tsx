@@ -9,7 +9,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const items = useSelector((state: RootState) => state.cart.items);
-
+  console.log(JSON.stringify({ items }));
   const handleSaveCart = async () => {
     if (items.length > 0) {
       try {

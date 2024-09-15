@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,21 +15,16 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTotalItems, setCart } from "@/utils/redux/cart/cartSlice";
 import { Badge } from "@mui/material";
-import useAuthCheck from "@/hooks/useAuthCheck"; // Adjust the import path if needed
+import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
 
-const pages = [
-  { name: "Home", href: "/" },
-  // { name: "Products", href: "/products" },
-  // { name: "About", href: "/about" },
-  // { name: "Contact", href: "/contact" },
-];
+const pages = [{ name: "Home", href: "/" }];
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch();
-  const isAuthenticated = useAuthCheck(); // Use the custom hook
+  const isAuthenticated = useAuthCheck();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -41,18 +35,19 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await fetch("/api/cart/get");
-        const data = await response.json();
-        dispatch(setCart(data.items));
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      }
-    };
-
-    fetchCart();
-  }, [dispatch]);
+    if (isAuthenticated) {
+      const fetchCart = async () => {
+        try {
+          const response = await fetch("/api/cart/get");
+          const data = await response.json();
+          dispatch(setCart(data.items));
+        } catch (error) {
+          console.error("Error fetching cart items:", error);
+        }
+      };
+      fetchCart();
+    }
+  }, [dispatch, isAuthenticated]);
 
   const handleLogout = async () => {
     try {
@@ -146,7 +141,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={()=>handleLogout()}
+                onClick={() => handleLogout()}
               >
                 Logout
               </Button>

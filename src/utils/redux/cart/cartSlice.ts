@@ -1,9 +1,8 @@
-// redux/cartSlice.ts
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   quantity: number;
@@ -14,7 +13,7 @@ interface CartState {
 }
 
 const initialState: CartState = {
-  items: [],
+  items: [],  // Ensure initialState is set correctly
 };
 
 const cartSlice = createSlice({
@@ -22,6 +21,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<CartItem>) => {
+      if (!Array.isArray(state.items)) {
+        state.items = [];
+      }
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
@@ -31,7 +33,10 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
       }
     },
-    removeOrDecrementItem: (state, action: PayloadAction<number>) => {
+    removeOrDecrementItem: (state, action: PayloadAction<string>) => {
+      if (!Array.isArray(state.items)) {
+        state.items = [];
+      }
       const existingItem = state.items.find(item => item.id === action.payload);
       if (existingItem) {
         if (existingItem.quantity > 1) {
@@ -42,17 +47,16 @@ const cartSlice = createSlice({
       }
     },
     clearCart: (state) => {
-      state.items = [];
+      state.items = [];  // Ensure items is always an array
     },
     setCart(state, action: PayloadAction<CartItem[]>) {
-      state.items = action.payload;
+      state.items = Array.isArray(action.payload) ? action.payload : [];  // Ensure items is an array
     },
   },
 });
 
-// Update the selector to handle undefined state
 export const selectTotalItems = createSelector(
-  (state: RootState) => state.cart.items || [],  // Ensure items is always an array
+  (state: RootState) => Array.isArray(state.cart.items) ? state.cart.items : [],  // Ensure items is an array
   (items) => items.reduce((total, item) => total + item.quantity, 0)
 );
 

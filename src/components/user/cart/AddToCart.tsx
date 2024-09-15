@@ -1,18 +1,18 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { addItem } from "@/utils/redux/cart/cartSlice";
 import { IconButton } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { AddToCartProps } from "@/types";
-// Removed: import { saveCartItems } from "@/utils/redux/cart/cartThunks";
-// Removed: import { AppDispatch } from "@/utils/redux/store";
+import { addItem } from "@/utils/redux/cart/cartSlice";
+import { saveCartItems } from "@/utils/redux/cart/cartThunks";
+import { AppDispatch } from "@/utils/redux/store";
 
 const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>(); // Ensure dispatch is typed correctly
 
-  const addItemToCart = () => {
+  const addItemToCart = async () => {
     const newItem = {
-      id: data.id,
+      id: data.id.toString(),
       name: data.name,
       price: data.price,
       quantity: data.quantity,
@@ -21,8 +21,14 @@ const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
     // Add item to local cart state
     dispatch(addItem(newItem));
 
-    // If you need to handle saving cart items to the server, you can add that logic here
-    // For example, you can use an effect or a separate function to handle server communication
+    try {
+      // Handle saving cart items to the server
+      await dispatch(saveCartItems([newItem])).unwrap();
+      // Optionally, show success message or update UI
+    } catch (error) {
+      console.error("Failed to save cart items:", error);
+      // Optionally, show error message or handle failure
+    }
   };
 
   return (

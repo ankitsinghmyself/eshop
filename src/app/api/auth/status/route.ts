@@ -9,7 +9,6 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Ensure you have a secret key
 
 export async function GET(request: NextRequest) {
-  try {
     // Extract cookies from the request
     const cookies = request.headers.get('cookie');
     const parsedCookies = cookies ? parse(cookies) : {};
@@ -38,8 +37,4 @@ export async function GET(request: NextRequest) {
     } else {
       return NextResponse.json({ isAuthenticated: false });
     }
-  } catch (error) {
-    console.error('Error checking authentication status:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-  }
 }

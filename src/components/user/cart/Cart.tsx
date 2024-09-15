@@ -24,14 +24,11 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import useAuthCheck from "@/hooks/useAuthCheck";
 
 const Cart: React.FC = () => {
-  const items = useSelector((state: RootState) => state.cart.items);
+  const items = useSelector((state: RootState) => state.cart.items || []);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch<AppDispatch>();
-  // const isAuthenticated = useAuthCheck();
+  const isAuthenticated = useAuthCheck();
 
-  // if (isAuthenticated === null) {
-  //   return <div>Loading...</div>; // Or a loading spinner
-  // }
   const handleRemoveItem = async (itemId: number) => {
     dispatch(removeOrDecrementItem(itemId));
     try {
@@ -62,7 +59,6 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckoutCart = () => {
-    // Redirect to checkout page without authentication check
     window.location.href = "/checkout";
   };
 
@@ -73,25 +69,28 @@ const Cart: React.FC = () => {
       </Typography>
       <List>
         {items.length > 0 ? (
-          items.map((item) => (
-            <React.Fragment key={item.id}>
-              <ListItem>
-                <ListItemText
-                  primary={`${item.name} - $${item.price}`}
-                  secondary={`Quantity: ${item.quantity}`}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    onClick={() => handleRemoveItem(item.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))
+          Object.keys(items).map((key) => {
+            const item = items[key];
+            return (
+              <React.Fragment key={item.id}>
+                <ListItem>
+                  <ListItemText
+                    primary={`${item.name} - $${item.price}`}
+                    secondary={`Quantity: ${item.quantity}`}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            );
+          })
         ) : (
           <Typography variant="body1" sx={{ mt: 2 }}>
             Your cart is empty.
