@@ -29,7 +29,7 @@ const Cart: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useAuthCheck();
 
-  const handleRemoveItem = async (itemId: number) => {
+  const handleRemoveItem = async (itemId: any) => {
     dispatch(removeOrDecrementItem(itemId));
     try {
       const response = await fetch("/api/cart/remove", {
