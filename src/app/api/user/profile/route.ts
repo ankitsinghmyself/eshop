@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers'; // For handling cookies in Edge API routes
+import { cookies } from 'next/headers'; 
 
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET!;
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     // Fetch user data from the database
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, name: true }, // Customize as needed
+      select: { id: true, email: true, name: true, isAdmin: true }, // Customize as needed
     });
 
     if (!user) {

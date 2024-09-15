@@ -55,6 +55,21 @@ export default function Dashboard() {
           >
             Do Something
           </Button>
+          {
+            // if user is Admin
+            userData.isAdmin === true && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  router.push('/admin');
+                }}
+                sx={{ mt: 2 }}
+              >
+                Admin Dashboard
+              </Button>
+            )
+          }
         </Box>
       ) : (
         <Typography>Loading...</Typography>

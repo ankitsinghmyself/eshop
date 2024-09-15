@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; // Adjust the path as needed
 import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 
-const SECRET_KEY = process.env.JWT_SECRET!;
+const SECRET_KEY = process.env.JWT_SECRET || 'default_secret'; // Ensure a fallback
 
+// Get all products
 export async function GET() {
   try {
     const products = await prisma.products.findMany();
@@ -14,18 +16,18 @@ export async function GET() {
   }
 }
 
+// Create a new product
 export async function POST(request: NextRequest) {
-  const { name, details, price, img, quantity, isActive } = await request.json();
-  const authHeader = request.headers.get('Authorization');
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
-
   try {
-    // Verify the token
+    const { name, details, price, img, quantity, isActive } = await request.json();
+
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
     const authorId = decoded.id;
 
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
         img,
         quantity,
         isActive,
-        authorId, // Corrected this line
+        authorId,
       },
     });
 
@@ -52,18 +54,18 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Update an existing product
 export async function PUT(request: NextRequest) {
-  const { id, updateData } = await request.json();
-  const authHeader = request.headers.get('Authorization');
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
-
   try {
-    // Verify the token
+    const { id, updateData } = await request.json();
+
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
     const authorId = decoded.id;
 
@@ -75,7 +77,7 @@ export async function PUT(request: NextRequest) {
       where: { id },
       data: {
         ...updateData,
-        authorId, // Corrected this line
+        authorId,
       },
     });
 
@@ -86,19 +88,10 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+// Delete a product
 export async function DELETE(request: NextRequest) {
-  const { productId } = await request.json();
-  const authHeader = request.headers.get('Authorization');
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
-
   try {
-    // Verify the token
-    const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
+    const { productId } = await request.json();
 
     if (!productId) {
       return NextResponse.json({ message: 'Product ID is required' }, { status: 400 });

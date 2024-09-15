@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import toast from "react-hot-toast";
 
 interface Product {
   id: number;
@@ -72,6 +73,7 @@ const ManageProduct: React.FC = () => {
     setImg("");
     setQuantity(0);
     setIsActive(true);
+    toast.success("Product added successfully");
   };
 
   const handleUpdateProduct = async () => {
@@ -144,7 +146,7 @@ const ManageProduct: React.FC = () => {
             sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}
           >
             <TextField
-              label="Product Name"
+              label="Product Name *"
               value={name}
               onChange={(e) => setName(e.target.value)}
               variant="outlined"
@@ -156,20 +158,20 @@ const ManageProduct: React.FC = () => {
               variant="outlined"
             />
             <TextField
-              label="Price"
+              label="Price *"
               value={price}
               type="number"
               onChange={(e) => setPrice(e.target.value)}
               variant="outlined"
             />
             <TextField
-              label="Image URL"
+              label="Image URL *"
               value={img}
               onChange={(e) => setImg(e.target.value)}
               variant="outlined"
             />
             <TextField
-              label="Quantity"
+              label="Quantity *"
               value={quantity}
               type="number"
               onChange={(e) => setQuantity(e.target.value)}
