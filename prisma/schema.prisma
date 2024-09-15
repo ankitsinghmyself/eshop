@@ -11,19 +11,20 @@ datasource db {
 }
 
 model Products {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  details   String?
-  price     Float
-  img       String
-  quantity  Int
-  favorite  Boolean  @default(false)
-  rating    Int      @default(0)
-  published Boolean  @default(false)
-  authorId  String?  @db.ObjectId
-  isActive  Boolean  @default(true)
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  name               String
+  details            String?
+  price              Float
+  discountPercentage Float?   @default(0.0)
+  img                String
+  quantity           Int
+  favorite           Boolean  @default(false)
+  rating             Int      @default(0)
+  published          Boolean  @default(false)
+  authorId           String?  @db.ObjectId
+  isActive           Boolean  @default(true)
 }
 
 model Profile {
@@ -34,16 +35,16 @@ model Profile {
 }
 
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  username      String?  @unique
-  email         String?  @unique
+  username      String?         @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
   password      String
-  isAdmin       Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isAdmin       Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   Profile       Profile?
   Cart          Cart[]
   orders        Order[]
@@ -54,7 +55,7 @@ model User {
 
 model Account {
   id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId                   String  @db.ObjectId 
+  userId                   String  @db.ObjectId
   type                     String
   provider                 String
   providerAccountId        String
@@ -110,7 +111,6 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
 
 model Cart {
   id     String @id @default(auto()) @map("_id") @db.ObjectId

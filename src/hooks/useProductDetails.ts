@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface Product {
   id: string;
   name: string;
   details: string;
   price: number;
+  discountPercentage?: number;
   img: string;
   quantity: number;
   favorite: boolean;
@@ -35,7 +36,7 @@ const useProductDetails = (productId: string): UseProductDetailsResult => {
       try {
         const response = await fetch(`/api/products?id=${productId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch product details');
+          throw new Error("Failed to fetch product details");
         }
         const data = await response.json();
         setProduct(data);

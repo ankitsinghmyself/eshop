@@ -39,7 +39,7 @@ const ManageProduct: React.FC = () => {
 
   useEffect(() => {
     async function fetchProducts() {
-      const response = await fetch("/api/products");
+      const response = await fetch("/api/products/getAllProducts/");
       const fetchedProducts = await response.json();
       setProducts(fetchedProducts);
     }

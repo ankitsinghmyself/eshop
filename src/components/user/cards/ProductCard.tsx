@@ -14,23 +14,26 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import AddToCart from "../cart/AddToCart";
+import { calculateDiscountedPrice } from "@/utils/priceUtils";
 
 interface ProductCardProps {
-  id: number;
+  id: string;
   name: string;
   price: number;
+  discountPercentage?: number;
   details?: string;
   img: string;
   favorite: boolean;
   rating: number;
   published: boolean;
-  authorId: number;
+  authorId: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
   name,
   price,
+  discountPercentage,
   details,
   img,
   favorite,
@@ -38,9 +41,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   published,
   authorId,
 }) => {
-  const discount = 0.1;
-  const discountedPrice = price - price * discount;
-
   return (
     <Card
       sx={{
@@ -100,7 +100,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         style={{ objectFit: "cover" }}
       />
 
-      <Grid px={1} py={'5px'}>
+      <Grid px={1} py={"5px"}>
         <Typography
           gutterBottom
           variant="h5"
@@ -134,16 +134,27 @@ const ProductCard: React.FC<ProductCardProps> = ({
             margin: "5px 0",
           }}
         >
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ textDecoration: "line-through" }}
-          >
-            ₹{price.toFixed(2)}
-          </Typography>
+          {discountPercentage <= 0 ? null : (
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{ textDecoration: "line-through" }}
+            >
+              ₹{price.toFixed(2)}
+            </Typography>
+          )}
           <Typography variant="h6" color="primary">
-            ₹{discountedPrice.toFixed(2)}
+            ₹
+            {calculateDiscountedPrice(
+              price,
+              discountPercentage
+            ).discountedPrice.toFixed(2)}
           </Typography>
+          {discountPercentage <= 0 ? null : (
+            <Typography variant="body2" color="text.secondary">
+              ({discountPercentage}% off)
+            </Typography>
+          )}
         </Box>
         {/* <Typography variant="body2" align="center">
           Rating:{" "}
@@ -152,7 +163,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           ))}
         </Typography> */}
       </Grid>
-      <CardActions sx={{ justifyContent: "center", }}>
+      <CardActions sx={{ justifyContent: "center" }}>
         <AddToCart data={{ id, name, price, quantity: 1 }} />
         <Button
           variant="contained"

@@ -1,20 +1,18 @@
-"use client"; // This directive is used if you are using this file as a client component
-
+'use client';
+import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Typography, Container, Button, Grid } from "@mui/material";
 import useProductDetails from "@/hooks/useProductDetails";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
-import { FC } from "react";
 import AddToCart from "@/components/user/cart/AddToCart";
+import { calculateDiscountedPrice } from "@/utils/priceUtils";
 
-const ProductPage: FC = () => {
+const ProductPage: React.FC = () => {
   const { productId } = useParams(); // Access dynamic route parameters
   const router = useRouter();
 
-  // Ensure productId is a string
   const { product, loading, error } = useProductDetails(productId as string);
 
-  // Loading state
   if (loading) {
     return (
       <Container sx={{ textAlign: "center", mt: 5 }}>
@@ -23,7 +21,6 @@ const ProductPage: FC = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Container sx={{ textAlign: "center", mt: 5 }}>
@@ -42,7 +39,6 @@ const ProductPage: FC = () => {
     );
   }
 
-  // No product found
   if (!product) {
     return (
       <Container sx={{ textAlign: "center", mt: 5 }}>
@@ -59,7 +55,6 @@ const ProductPage: FC = () => {
     );
   }
 
-  // Product details
   return (
     <Container>
       <Grid container spacing={3}>
@@ -74,23 +69,29 @@ const ProductPage: FC = () => {
           <Typography variant="h4" gutterBottom>
             {product.name}
           </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            align="left"
-            sx={{
-              display: "-webkit-box",
-              overflow: "hidden",
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 3,
-              textOverflow: "ellipsis",
-            }}
-          >
+          <Typography variant="body2" color="textSecondary" align="left">
             {product.details}
           </Typography>
-          <Typography variant="h5" color="primary" gutterBottom>
-            ${product.price}
+
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ textDecoration: "line-through" }}
+          >
+            ₹{product.price.toFixed(2)}
           </Typography>
+
+          {/* Calculate and display discounted price directly */}
+          <Typography variant="h6" color="primary">
+            ₹{
+              calculateDiscountedPrice(product.price, product.discountPercentage).discountedPrice.toFixed(2)
+            }
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            {product.discountPercentage}% off
+          </Typography>
+
           <AddToCart
             data={{
               id: product.id,
