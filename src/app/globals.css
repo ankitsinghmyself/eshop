@@ -14,7 +14,15 @@
   --secondary-color: #ffa69e;
   --alternate-secondary-color: #93e1d8;
   --primary-gradient: linear-gradient(to right, var(--primary-color), var(--alternate-secondary-color));
-  --secondary-gradient: linear-gradient(to right, var(--secondary-color), var(--alternate-secondary-color));
+  --secondary-gradient: linear-gradient(to right, #fff, var(--alternate-secondary-color));
+
+  --primary-glow: radial-gradient(var(--primary-color), rgba(1, 65, 255, 0));
+  --secondary-glow: linear-gradient(
+    to bottom right,
+    rgba(1, 65, 255, 0),
+    rgba(1, 65, 255, 0),
+    #ffa69e
+  );
 
   --tile-start-rgb: 239, 245, 249;
   --tile-end-rgb: 228, 232, 233;

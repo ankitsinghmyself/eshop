@@ -33,7 +33,7 @@ const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
 
   return (
     <IconButton
-      color="primary"
+      sx={{ color: "var(--secondary-color)" }}
       onClick={addItemToCart}
       aria-label="add to cart"
       size="large"

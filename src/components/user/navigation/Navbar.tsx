@@ -109,7 +109,15 @@ export default function Navbar() {
           </Link>
           <Link href="/cart" passHref>
             <IconButton size="large" aria-label="cart" color="inherit">
-              <Badge badgeContent={totalItems} color="secondary">
+              <Badge
+                badgeContent={totalItems}
+                sx={{
+                  "& .MuiBadge-badge": {
+                    backgroundColor: "var(--secondary-color)",
+                    color: "white",
+                  },
+                }}
+              >
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
@@ -140,7 +148,15 @@ export default function Navbar() {
             ))}
             <Link href="/cart" passHref>
               <IconButton size="large" aria-label="cart" color="inherit">
-                <Badge badgeContent={totalItems} color="secondary">
+                <Badge
+                  badgeContent={totalItems}
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      backgroundColor: "var(--secondary-color)",
+                      color: "white",
+                    },
+                  }}
+                >
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>

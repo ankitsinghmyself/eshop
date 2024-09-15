@@ -4,7 +4,7 @@ import { CircularProgress, Box } from '@mui/material';
 import { styled } from '@mui/system';
 
 const CustomCircularProgress = styled(CircularProgress)({
-  color: '#87CEEB', // Light sky color
+  color: 'var(--secondary-color)',
   width: '80px !important',
   height: '80px !important',
 });

@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
   Box,
+  Grid,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
@@ -47,6 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         maxWidth: 345,
         margin: "auto",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        background: "var(--secondary-gradient)",
         "&:hover": {
           transform: "scale(1.05)",
           boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
@@ -98,26 +100,38 @@ const ProductCard: React.FC<ProductCardProps> = ({
         style={{ objectFit: "cover" }}
       />
 
-      <CardContent>
+      <Grid px={1} py={'5px'}>
         <Typography
           gutterBottom
           variant="h5"
           component="div"
           align="center"
-          sx={{ marginBottom: "16px" }}
+          // sx={{ marginBottom: "16px" }}
         >
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary" align="center">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{
+            display: "-webkit-box",
+            overflow: "hidden",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2, // limits to 3 lines
+            textOverflow: "ellipsis",
+          }}
+        >
           {details}
         </Typography>
+
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             gap: "8px",
-            margin: "16px 0",
+            margin: "5px 0",
           }}
         >
           <Typography
@@ -137,15 +151,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <StarIcon key={index} color="primary" />
           ))}
         </Typography> */}
-      </CardContent>
-      <CardActions sx={{ justifyContent: "center", gap: "8px" }}>
+      </Grid>
+      <CardActions sx={{ justifyContent: "center", }}>
         <AddToCart data={{ id, name, price, quantity: 1 }} />
         <Button
           variant="contained"
-          color="secondary"
+          sx={{
+            background: "var(--secondary-color)",
+            color: "white",
+            "&:hover": {
+              background: "var(--secondary-glow)",
+            },
+          }}
           onClick={() => {
             // Handle buy now
             console.log("Buy now for product:", id);
+            window.location.href = `/product/${id}`;
           }}
         >
           Buy Now

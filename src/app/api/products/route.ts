@@ -1,38 +1,65 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // Adjust the path as needed
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma"; // Adjust the path as needed
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-const SECRET_KEY = process.env.JWT_SECRET || 'default_secret'; // Ensure a fallback
+const SECRET_KEY = process.env.JWT_SECRET || "default_secret"; // Ensure a fallback
 
-// Get all products
-export async function GET() {
+// Get a specific product by ID
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const productId = searchParams.get("id");
+
+  if (!productId) {
+    return NextResponse.json(
+      { message: "Product ID is required" },
+      { status: 400 }
+    );
+  }
+
   try {
-    const products = await prisma.products.findMany();
-    return NextResponse.json(products);
+    const product = await prisma.products.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(product);
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error("Error fetching product:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
 // Create a new product
 export async function POST(request: NextRequest) {
   try {
-    const { name, details, price, img, quantity, isActive } = await request.json();
+    const { name, details, price, img, quantity, isActive } =
+      await request.json();
 
     const cookieStore = cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = cookieStore.get("token")?.value;
 
     if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
     const authorId = decoded.id;
 
     if (!name || !price || !img || !quantity) {
-      return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const newProduct = await prisma.products.create({
@@ -49,8 +76,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
-    console.error('Error adding product:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error("Error adding product:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -60,17 +90,20 @@ export async function PUT(request: NextRequest) {
     const { id, updateData } = await request.json();
 
     const cookieStore = cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = cookieStore.get("token")?.value;
 
     if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
     const authorId = decoded.id;
 
     if (!id || !updateData) {
-      return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const updatedProduct = await prisma.products.update({
@@ -83,8 +116,11 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error('Error updating product:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error("Error updating product:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -94,7 +130,10 @@ export async function DELETE(request: NextRequest) {
     const { productId } = await request.json();
 
     if (!productId) {
-      return NextResponse.json({ message: 'Product ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { message: "Product ID is required" },
+        { status: 400 }
+      );
     }
 
     await prisma.products.delete({
@@ -103,7 +142,10 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({}, { status: 204 });
   } catch (error) {
-    console.error('Error deleting product:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error("Error deleting product:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
