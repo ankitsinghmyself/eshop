@@ -125,10 +125,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             color="text.secondary"
             sx={{ textDecoration: "line-through" }}
           >
-            ${price.toFixed(2)}
+            ₹{price.toFixed(2)}
           </Typography>
           <Typography variant="h6" color="primary">
-            ${discountedPrice.toFixed(2)}
+            ₹{discountedPrice.toFixed(2)}
           </Typography>
         </Box>
         {/* <Typography variant="body2" align="center">

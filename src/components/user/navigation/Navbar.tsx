@@ -17,6 +17,8 @@ import { selectTotalItems, setCart } from "@/utils/redux/cart/cartSlice";
 import { Badge } from "@mui/material";
 import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import logo from "../../../../public/logo.webp";
 
 const pages = [{ name: "Home", href: "/" }];
 
@@ -73,7 +75,12 @@ export default function Navbar() {
   };
 
   return (
-    <AppBar position="fixed">
+    <AppBar
+      position="fixed"
+      sx={{
+        background: "var(--primary-gradient)",
+      }}
+    >
       <Toolbar>
         <Box
           sx={{
@@ -97,7 +104,7 @@ export default function Navbar() {
               component="div"
               sx={{ flexGrow: 1, textAlign: "center" }}
             >
-              eShop
+              <Image src={logo} alt="Logo" width={56} height={56} />
             </Typography>
           </Link>
           <Link href="/cart" passHref>
@@ -118,7 +125,7 @@ export default function Navbar() {
         >
           <Link href="/">
             <Typography variant="h6" noWrap component="div">
-              eShop
+              <Image src={logo} alt="Logo" width={56} height={56} />
             </Typography>
           </Link>
           <Box sx={{ display: "flex", alignItems: "center" }}>
