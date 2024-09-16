@@ -14,7 +14,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTotalItems, setCart } from "@/utils/redux/cart/cartSlice";
-import { Badge } from "@mui/material";
+import { Badge, Menu, MenuItem } from "@mui/material";
 import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -24,9 +24,11 @@ const pages = [{ name: "Home", href: "/" }];
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch();
   const isAuthenticated = useAuthCheck();
+  const userName = "John Doe"; // Replace with actual user name from auth context
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -34,6 +36,14 @@ export default function Navbar() {
 
   const handleDrawerClose = () => {
     setDrawerOpen(false);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -123,6 +133,7 @@ export default function Navbar() {
             </IconButton>
           </Link>
         </Box>
+
         <Box
           sx={{
             flexGrow: 1,
@@ -136,6 +147,7 @@ export default function Navbar() {
               <Image src={logo} alt="Logo" width={56} height={56} />
             </Typography>
           </Link>
+
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {pages.map((page) => (
               <Button
@@ -161,13 +173,26 @@ export default function Navbar() {
                 </Badge>
               </IconButton>
             </Link>
+
             {isAuthenticated ? (
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => handleLogout()}
-              >
-                Logout
-              </Button>
+              <Box sx={{ ml: 2 }}>
+                <Button onMouseEnter={handleMenuOpen} sx={{ color: "white" }}>
+                  {userName}
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  MenuListProps={{
+                    onMouseLeave: handleMenuClose,
+                  }}
+                >
+                  <MenuItem onClick={handleMenuClose}>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Box>
             ) : (
               <Link href="/signin" passHref>
                 <Button sx={{ my: 2, color: "white", display: "block" }}>
@@ -177,6 +202,7 @@ export default function Navbar() {
             )}
           </Box>
         </Box>
+
         <Drawer
           anchor="left"
           open={drawerOpen}
@@ -201,6 +227,26 @@ export default function Navbar() {
                 </Link>
               ))}
             </List>
+            {isAuthenticated ? (
+              <List>
+                <Link href="/dashboard">
+                  <ListItem button>
+                    <ListItemText primary="Dashboard" />
+                  </ListItem>
+                </Link>
+                <ListItem button onClick={handleLogout}>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </List>
+            ) : (
+              <List>
+                <Link href="/signin">
+                  <ListItem button>
+                    <ListItemText primary="Sign In" />
+                  </ListItem>
+                </Link>
+              </List>
+            )}
           </Box>
         </Drawer>
       </Toolbar>
