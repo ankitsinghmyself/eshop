@@ -43,7 +43,7 @@ export default function Dashboard() {
       </Typography>
       {userData ? (
         <Box sx={{ width: '100%', maxWidth: 600 }}>
-          <Typography variant="h6">Welcome, {userData.name}!</Typography>
+          <Typography variant="h6">Welcome, {userData.firstName}!</Typography>
           <Typography variant="body1">Email: {userData.email}</Typography>
           <Button
             variant="contained"

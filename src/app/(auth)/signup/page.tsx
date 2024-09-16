@@ -5,6 +5,8 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import toast from "react-hot-toast";
 
 export default function SignUp() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +19,12 @@ export default function SignUp() {
 
     const response = await fetch("/api/auth/signup", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -26,7 +33,6 @@ export default function SignUp() {
     if (response.ok) {
       toast.success("Sign up successful");
       window.location.href = "/signin";
-
     } else {
       // Handle error
       const errorData = await response.json();
@@ -52,6 +58,24 @@ export default function SignUp() {
         onSubmit={handleSubmit}
         sx={{ width: "100%", maxWidth: 400 }}
       >
+        <TextField
+          type="text"
+          label="Name"
+          fullWidth
+          margin="normal"
+          required
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <TextField
+          type="text"
+          label="Last Name"
+          fullWidth
+          margin="normal"
+          required
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
         <TextField
           type="email"
           label="Email"

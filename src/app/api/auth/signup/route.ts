@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
+  const { firstName, lastName, email, password } = await req.json();
 
   try {
     
@@ -27,6 +27,8 @@ export async function POST(req: NextRequest) {
     // Create the new user
     const user = await prisma.user.create({
       data: {
+        firstName,
+        lastName,
         email,
         password: hashedPassword,
       },

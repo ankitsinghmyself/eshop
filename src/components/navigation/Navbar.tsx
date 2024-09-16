@@ -27,7 +27,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch();
-  const isAuthenticated = useAuthCheck();
+  const {isAuthenticated, userData} = useAuthCheck();
   const userName = "John Doe"; // Replace with actual user name from auth context
 
   const handleDrawerOpen = () => {
@@ -177,7 +177,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <Box sx={{ ml: 2 }}>
                 <Button onMouseEnter={handleMenuOpen} sx={{ color: "white" }}>
-                  {userName}
+                  {userData.firstName}
                 </Button>
                 <Menu
                   anchorEl={anchorEl}
