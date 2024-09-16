@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import ProductCard from '../cards/ProductCard';
-import LoadingSpinner from '../../common/loaders/LoadingSpinner';
+import LoadingSpinner from '../common/loaders/LoadingSpinner';
 import useFetchProducts from '@/hooks/useFetchProducts';
 
 const ProductsList: React.FC = () => {

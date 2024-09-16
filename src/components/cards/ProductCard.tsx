@@ -13,8 +13,8 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import AddToCart from "../cart/AddToCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
+import AddToCart from "@/components/cart/AddToCart";
 
 interface ProductCardProps {
   id: string;

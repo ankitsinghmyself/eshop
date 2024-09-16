@@ -18,7 +18,7 @@ import { Badge } from "@mui/material";
 import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import logo from "../../../../public/logo.webp";
+import logo from "../../../public/logo.webp";
 
 const pages = [{ name: "Home", href: "/" }];
 

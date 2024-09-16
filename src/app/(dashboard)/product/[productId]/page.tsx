@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Typography, Container, Button, Grid } from "@mui/material";
 import useProductDetails from "@/hooks/useProductDetails";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
-import AddToCart from "@/components/user/cart/AddToCart";
+import AddToCart from "@/components/cart/AddToCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
 
 const ProductPage: React.FC = () => {
