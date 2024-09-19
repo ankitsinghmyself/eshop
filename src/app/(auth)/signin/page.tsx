@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import { Box, TextField, Button, Typography, Grid } from "@mui/material";
 import Image from "next/image";
-import eshop_Login_img from '../../../../public/images/auth/eshop_login.webp';
-import logo from '../../../../public/logo.webp';
+import eshop_Login_img from "../../../../public/images/auth/eshop_login.webp";
+import logo from "../../../../public/logo.webp";
+import styles from "@/styles/auth/LoginPage.module.scss";
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,16 +59,30 @@ export default function SignIn() {
 
   return (
     <>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} sm={8} md={8} lg={8} sx={{ textAlign: "center", display: {xs:"none", sm:"block"} }}>
+      <Grid container justifyContent="center" className={styles.container}>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={8}
+          lg={8}
+          sx={{ textAlign: "center", display: { xs: "none", sm: "block" } }}
+          className={styles.imgContainer}
+        >
           <Image
-            src={eshop_Login_img}
+            className={styles.img}
+            src={logo}
             alt="Login Screen img"
             width={400}
             height={400}
-            priority 
+            priority
           />
+          <div className={styles.animatedHr}>
+            <hr />
+            <h4>Welcome to the Login Screen </h4>
+          </div>
         </Grid>
+
         <Grid item xs={12} sm={4} md={4} lg={4}>
           <Box
             sx={{
@@ -77,9 +93,7 @@ export default function SignIn() {
             }}
           >
             <Image src={logo} alt="Logo" width={100} height={100} />
-            <Typography variant="h6">
-              Nice to see you again
-            </Typography>
+            <Typography variant="h6">Nice to see you again</Typography>
             <Box
               component="form"
               onSubmit={handleLoginSubmit}

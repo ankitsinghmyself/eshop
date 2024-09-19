@@ -1,0 +1,59 @@
+.container {
+  .imgContainer {
+    padding: 10px 0;
+    position: relative;
+    .img {
+      animation: animations 5s 1 ease-in-out;
+    }
+    .animatedHr {
+        position: fixed;
+        border: none; 
+        height: 2px; 
+        background-color: #3498db; 
+        width: 50%; 
+        opacity: 0; 
+        animation: loadAnimation 5s forwards 1 ease; 
+        margin: 20px auto;
+      }
+  }
+  
+  
+}
+
+@keyframes animations {
+  0% {
+    left: 0;
+    top: 0;
+  }
+  25% {
+    left: 25%;
+    top: 0;
+    transform: rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    left: 0;
+    top: 0;
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+}
+@keyframes loadAnimation {
+    0% {
+      width: 0; 
+      opacity: 0; 
+      height: 80px; 
+    
+    }
+    50% {
+      width: 60%;
+      opacity: 1;
+      height: 50px;}
+    100% {
+      width: 60%;
+      opacity: 0;
+      height: 0px; 
+
+    }
+  }
