@@ -1,19 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
-import { CartItem } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import jwt from "jsonwebtoken";
+import { parse } from "cookie";
+import { CartItem } from "@/types";
 
 const SECRET_KEY = process.env.JWT_SECRET!;
 
 // Type guard to check if a value is an array of CartItem
 function isCartItemArray(value: any): value is CartItem[] {
-  return Array.isArray(value) && value.every(
-    (item: any) => item &&
-    typeof item.id === 'string' &&
-    typeof item.name === 'string' &&
-    typeof item.price === 'number' &&
-    typeof item.quantity === 'number'
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item: any) =>
+        item &&
+        typeof item.id === "string" &&
+        typeof item.name === "string" &&
+        typeof item.price === "number" &&
+        typeof item.img === "string" &&
+        typeof item.quantity === "number"
+    )
   );
 }
 
@@ -21,11 +26,11 @@ export async function POST(req: NextRequest) {
   try {
     // Parse request body
     const { items }: { items: any[] } = await req.json();
-    
-    const cookies = parse(req.headers.get('cookie') || '');
+
+    const cookies = parse(req.headers.get("cookie") || "");
     const token = cookies.token;
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
     const userId = decoded.id;
@@ -36,11 +41,11 @@ export async function POST(req: NextRequest) {
     });
 
     // Initialize existing items if not present
-    const existingItems = existingCart?.items as any[] || [];
-    
+    const existingItems = (existingCart?.items as any[]) || [];
+
     // Ensure existingItems is an array of CartItem
     if (!isCartItemArray(existingItems)) {
-      return NextResponse.json({ error: 'Invalid cart data' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid cart data" }, { status: 400 });
     }
 
     // Create a map to track item quantities
@@ -77,7 +82,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(cart, { status: 200 });
   } catch (error) {
-    console.error('Error saving cart items:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error("Error saving cart items:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

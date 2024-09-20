@@ -1,19 +1,20 @@
-// types.ts
 export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  img: string;
+  quantity: number;
+}
+
+export interface AddToCartProps {
+  data: {
     id: string;
     name: string;
     price: number;
+    img: string;
     quantity: number;
-  }
-  
-  export interface AddToCartProps {
-    data: {
-      id: string;
-      name: string;
-      price: number;
-      quantity: number;
-    };
-  }
+  };
+}
 
 export interface UserAddress {
   pinCode: any;
@@ -25,5 +26,5 @@ export interface UserAddress {
 }
 export interface OrderPayload {
   items: CartItem[]; // Array of items in the order
-  address: string;   // Address for the order
+  address: string; // Address for the order
 }

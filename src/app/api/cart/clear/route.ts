@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     // Clear the cart
     await prisma.cart.update({
       where: { userId },
-      data: { items: [] }, // Clear items
+      data: { items: [] }, 
     });
 
     return NextResponse.json({ message: 'Cart cleared' }, { status: 200 });

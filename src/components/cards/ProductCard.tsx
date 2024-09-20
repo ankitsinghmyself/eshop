@@ -164,7 +164,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </Typography> */}
       </Grid>
       <CardActions sx={{ justifyContent: "center" }}>
-        <AddToCart data={{ id, name, price, quantity: 1 }} />
+        <AddToCart data={{ id, name, price, img, quantity: 1 }} />
         <Button
           variant="contained"
           sx={{

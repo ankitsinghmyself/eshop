@@ -19,6 +19,8 @@ import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import logo from "../../../public/logo.webp";
+import { removeCartItem } from "@/utils/redux/cart/cartThunks";
+import { AppDispatch } from "@/utils/redux/store";
 
 const pages = [{ name: "Home", href: "/" }];
 
@@ -26,9 +28,8 @@ export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const totalItems = useSelector(selectTotalItems);
-  const dispatch = useDispatch();
-  const {isAuthenticated, userData} = useAuthCheck();
-  const userName = "John Doe"; // Replace with actual user name from auth context
+  const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, userData } = useAuthCheck();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);

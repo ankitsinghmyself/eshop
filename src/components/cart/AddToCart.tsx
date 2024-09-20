@@ -2,32 +2,27 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { IconButton } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { AddToCartProps } from "@/types";
 import { addItem } from "@/utils/redux/cart/cartSlice";
 import { saveCartItems } from "@/utils/redux/cart/cartThunks";
 import { AppDispatch } from "@/utils/redux/store";
+import { AddToCartProps } from "@/types/types";
+import useAuthCheck from "@/hooks/useAuthCheck";
 
 const AddToCart: React.FC<AddToCartProps> = ({ data }) => {
   const dispatch = useDispatch<AppDispatch>(); // Ensure dispatch is typed correctly
-
-  const addItemToCart = async () => {
+  const { isAuthenticated, userData } = useAuthCheck();
+  const addItemToCart = () => {
     const newItem = {
       id: data.id.toString(),
       name: data.name,
       price: data.price,
+      img: data.img,
       quantity: data.quantity,
     };
-
     // Add item to local cart state
     dispatch(addItem(newItem));
-
-    try {
-      // Handle saving cart items to the server
-      await dispatch(saveCartItems([newItem])).unwrap();
-      // Optionally, show success message or update UI
-    } catch (error) {
-      console.error("Failed to save cart items:", error);
-      // Optionally, show error message or handle failure
+    if (isAuthenticated) {
+      dispatch(saveCartItems([newItem])).unwrap();
     }
   };
 
