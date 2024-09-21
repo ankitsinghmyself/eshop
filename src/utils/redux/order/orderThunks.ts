@@ -1,7 +1,7 @@
 // redux/orderThunks.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { CartItem } from '@/types';
 import { RootState } from '@/utils/redux/store';
+import { CartItem } from '@/types/types';
 
 interface OrderPayload {
   items: CartItem[];

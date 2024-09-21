@@ -1,6 +1,6 @@
 // redux/user/userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserAddress } from '@/types'; // Define this type
+import { UserAddress } from '@/types/types'; // Define this type
 
 interface UserState {
   address: UserAddress | null;

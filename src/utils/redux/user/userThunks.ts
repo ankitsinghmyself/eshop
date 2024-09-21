@@ -1,6 +1,6 @@
 // utils/redux/user/userThunks.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { UserAddress } from '@/types'; // Define this type based on your schema
+import { UserAddress } from '@/types/types'; // Define this type based on your schema
 import { setUserAddress } from './userSlice';
 
 export const updateAddress = createAsyncThunk<void, UserAddress, { rejectValue: string }>(

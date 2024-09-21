@@ -14,23 +14,12 @@ import {
   Grid,
 } from "@mui/material";
 import { getUsers, addUser, updateUser, deleteUser } from "@/lib/userService";
-
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-  isAdmin: boolean;
-  emailVerified?: Date | null;
-  image?: string | null;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { User } from "@/types/types";
 
 const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,55 +31,75 @@ const ManageUsers: React.FC = () => {
       const fetchedUsers = await getUsers();
       setUsers(fetchedUsers);
     }
-
     fetchUsers();
   }, []);
 
   const handleAddUser = async () => {
     const newUser = await addUser({
-      name,
-      username,
-      email,
+      firstName,
+      lastName: lastName || null,
+      middleName: null,
+      birthdate: null,
+      gender: null,
+      address: null,
+      phone: null,
+      website: null,
+      username: username || null,
+      email: email || null,
+      emailVerified: null, // Set as null for new users
+      image: null, // Set as null for new users
       password,
       isAdmin,
-      emailVerified: null,
-      image: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date(), // Set the creation date
+      updatedAt: new Date(), // Set the updated date
     });
-    setUsers([...users, newUser]);
+    setUsers((prevUsers) => [...prevUsers, newUser]);
     resetForm();
   };
 
   const handleUpdateUser = async () => {
     if (editUserId === null) return;
-    const updatedUser = await updateUser(parseInt(editUserId, 10), {
-      name,
-      username,
-      email,
+    const updatedUser = await updateUser(editUserId, {
+      firstName,
+      lastName: lastName || null,
+      middleName: null,
+      birthdate: null,
+      gender: null,
+      address: null,
+      phone: null,
+      website: null,
+      username: username || null,
+      email: email || null,
+      emailVerified: null, // Optional; handle as needed
+      image: null, // Optional; handle as needed
       password,
       isAdmin,
-      updatedAt: new Date(),
+      updatedAt: new Date(), // Set the updated date
     });
-    setUsers(users.map((user) => (user.id === editUserId ? updatedUser : user)));
+    setUsers((prevUsers) =>
+      prevUsers.map((user) => (user.id === editUserId ? updatedUser : user))
+    );
     resetForm();
   };
-  const handleDeleteUser = async (id: number) => {
+
+  const handleDeleteUser = async (id: string) => {
     await deleteUser(id);
-    setUsers(users.filter((user) => user.id !== id.toString()));
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
   };
 
   const handleEditUser = (user: User) => {
     setEditUserId(user.id);
-    setName(user.name || "");
-    setUsername(user.username || "");
-    setEmail(user.email || "");
+    setFirstName(user.firstName);
+    setLastName(user.lastName || ""); // Handle optional last name
+    setUsername(user.username || ""); // Handle optional username
+    setEmail(user.email || ""); // Handle optional email
     setPassword(""); // Do not pre-fill the password
     setIsAdmin(user.isAdmin);
   };
 
   const resetForm = () => {
-    setName("");
+    setFirstName("");
+    setLastName("");
     setUsername("");
     setEmail("");
     setPassword("");
@@ -111,9 +120,15 @@ const ManageUsers: React.FC = () => {
           >
             <TextField
               required
-              label="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              label="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              variant="outlined"
+            />
+            <TextField
+              label="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               variant="outlined"
             />
             <TextField
@@ -170,14 +185,17 @@ const ManageUsers: React.FC = () => {
           <List>
             {users.map((user) => (
               <ListItem key={user.id} divider>
-                <ListItemText primary={user.name} secondary={user.email} />
+                <ListItemText
+                  primary={`${user.firstName} ${user.lastName || ""}`}
+                  secondary={user.email}
+                />
                 <ListItemSecondaryAction>
                   <Button color="primary" onClick={() => handleEditUser(user)}>
                     Edit
                   </Button>
                   <Button
                     color="secondary"
-                    onClick={() => handleDeleteUser(Number(user.id))}
+                    onClick={() => handleDeleteUser(user.id)}
                   >
                     Delete
                   </Button>

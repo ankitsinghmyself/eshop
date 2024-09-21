@@ -6,6 +6,7 @@ import useProductDetails from "@/hooks/useProductDetails";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
 import AddToCart from "@/components/cart/AddToCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
+import Image from "next/image";
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams(); // Access dynamic route parameters
@@ -59,9 +60,11 @@ const ProductPage: React.FC = () => {
     <Container>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <img
+          <Image
             src={product.img}
             alt={product.name}
+            width={300}
+            height={300}
             style={{ width: "100%", borderRadius: 8 }}
           />
         </Grid>
@@ -96,6 +99,7 @@ const ProductPage: React.FC = () => {
             data={{
               id: product.id,
               name: product.name,
+              img: product.img,
               price: product.price,
               quantity: 1,
             }}

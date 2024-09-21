@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { parse } from "cookie";
-import { CartItem } from "@/types";
+import { CartItem } from "@/types/types";
 
 const SECRET_KEY = process.env.JWT_SECRET!;
 

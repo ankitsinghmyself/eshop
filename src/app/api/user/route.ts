@@ -16,7 +16,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { name, username, email, password, isAdmin } = await request.json();
+  const { firstName,lastName, username, email, password, isAdmin } = await request.json();
   
   // Extract the token from the Authorization header
   const authHeader = request.headers.get('Authorization');
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     // Verify the token
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
 
-    if (!name || !username || !email || !password) {
+    if (!firstName || !username || !email || !password) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -39,7 +39,8 @@ export async function POST(request: Request) {
 
     const newUser = await prisma.user.create({
       data: {
-        name,
+        firstName,
+        lastName,
         username,
         email,
         password: hashedPassword,

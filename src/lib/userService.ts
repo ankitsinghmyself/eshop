@@ -23,7 +23,7 @@ export async function getUsers(): Promise<User[]> {
     return response.json();
   }
   
-  export async function updateUser(id: number, user: Partial<Omit<User, 'id'>>): Promise<User> {
+  export async function updateUser(id: string, user: Partial<Omit<User, 'id'>>): Promise<User> {
     const response = await fetch(`/api/user`, {
       method: 'PUT',
       headers: {
@@ -37,7 +37,7 @@ export async function getUsers(): Promise<User[]> {
     return response.json();
   }
   
-  export async function deleteUser(id: number): Promise<void> {
+  export async function deleteUser(id: string): Promise<void> {
     const response = await fetch(`/api/user`, {
       method: 'DELETE',
       headers: {

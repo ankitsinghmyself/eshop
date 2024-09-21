@@ -9,10 +9,13 @@ const SECRET_KEY = process.env.JWT_SECRET!;
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const itemId = searchParams.get('itemId');
-    
+    const itemId = searchParams.get("itemId");
+
     if (!itemId) {
-      return NextResponse.json({ error: "Item ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Item ID is required" },
+        { status: 400 }
+      );
     }
 
     const cookies = parse(req.headers.get("cookie") || "");
@@ -34,15 +37,16 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Type the items correctly
+    // @ts-ignore
     const items: CartItem[] = existingCart.items as CartItem[];
 
     // Filter out the item to remove
     const updatedItems = items.filter((item: CartItem) => item.id !== itemId);
 
-    // Update the cart with the new items array
     const cart = await prisma.cart.update({
       where: { userId },
-      data: { items: updatedItems }, // Ensure this is still an array
+      // @ts-ignore
+      data: { items: updatedItems },
     });
 
     return NextResponse.json(cart, { status: 200 });
