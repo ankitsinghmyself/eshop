@@ -1,18 +1,7 @@
+import { Product } from '@/types/types';
 import { useState, useEffect } from 'react';
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  details?: string;
-  img: string;
-  quantity: number;
-  favorite: boolean;
-  rating: number;
-  published: boolean;
-  authorId: string;
-  isActive: boolean;
-}
+
 
 interface UseFetchProductsResult {
   products: Product[];

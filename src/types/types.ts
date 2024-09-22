@@ -47,3 +47,16 @@ export interface User {
   createdAt?: Date; // Optional, usually set in the backend
   updatedAt?: Date; // Optional, usually set in the backend
 }
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  details?: string;
+  img: string;
+  quantity: number;
+  favorite: boolean;
+  rating: number;
+  published: boolean;
+  authorId: string;
+  isActive: boolean;
+}

@@ -7,6 +7,8 @@ import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
 import AddToCart from "@/components/cart/AddToCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
 import Image from "next/image";
+import Link from "next/link";
+import BackButton from "@/components/common/buttons/BackButton";
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams(); // Access dynamic route parameters
@@ -58,7 +60,11 @@ const ProductPage: React.FC = () => {
 
   return (
     <Container>
+
       <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <BackButton />
+        </Grid>
         <Grid item xs={12} sm={6}>
           <Image
             src={product.img}

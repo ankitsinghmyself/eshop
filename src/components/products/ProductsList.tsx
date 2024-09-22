@@ -1,24 +1,13 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import ProductCard from '../cards/ProductCard';
-import LoadingSpinner from '../common/loaders/LoadingSpinner';
-import useFetchProducts from '@/hooks/useFetchProducts';
+import { Product } from '@/types/types';
 
-const ProductsList: React.FC = () => {
-  const { products, loading, error } = useFetchProducts();
+interface ProductsListProps {
+  products: Product[]; 
+}
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (products.length === 0) {
-    return <div>No products available</div>;
-  }
-
+const ProductsList: React.FC<ProductsListProps> = ({ products }) => {
   return (
     <Grid
       container

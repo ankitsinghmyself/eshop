@@ -1,0 +1,39 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css");
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css");
+
+.sliderContainer {
+  padding: 20px;
+}
+
+.sliderHeading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.slickSlide {
+  display: flex; /* Ensure items are centered */
+  justify-content: center;
+}
+.card {
+  position: relative;
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.image {
+  display: block; 
+  border: 1px solid #ccc;
+}
+
+.info {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  color: white; /* Change color for better visibility */
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a background for contrast */
+  padding: 10px; /* Optional: Add padding */
+  border-radius: 5px; /* Optional: Rounded corners */
+}
