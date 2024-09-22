@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography, Link } from '@mui/material';
+import React from "react";
+import { Box, Typography, Link } from "@mui/material";
 
 const Footer: React.FC = () => {
   return (
@@ -8,23 +8,21 @@ const Footer: React.FC = () => {
       sx={{
         py: 3,
         px: 2,
-        mt: 'auto',
+        mt: "auto",
         background: "var(--primary-gradient)",
       }}
-      color={(theme) => (theme.palette.mode === 'light' ? 'black' : 'white')}
+      color={(theme) => (theme.palette.mode === "light" ? "black" : "white")}
     >
       <Typography variant="body1" align="center">
         © {new Date().getFullYear()} eshop. All rights reserved.
       </Typography>
-      <Box sx={{ textAlign: 'center', mt: 1 }}>
-        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
-          Privacy Policy
-        </Link>
-        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
-          Terms of Service
-        </Link>
-        <Link href="/#" color="inherit" sx={{ mx: 1 }}>
-          Contact
+      <Box sx={{ textAlign: "center", mt: 1 }}>
+        <Link
+          href="https://ankitsinghmyself.vercel.app/"
+          color="inherit"
+          sx={{ mx: 1 }}
+        >
+          Developed and Designed by Ankit
         </Link>
       </Box>
     </Box>
