@@ -64,7 +64,7 @@ export default function Dashboard() {
                 onClick={() => {
                   router.push('/admin');
                 }}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, ml: 2 }}
               >
                 Admin Dashboard
               </Button>
