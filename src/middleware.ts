@@ -30,7 +30,8 @@ export async function middleware(req: NextRequest) {
     pathname === '/' ||
     pathname === '/cart' ||
     pathname.startsWith('/product/') ||
-    pathname.startsWith('/_next/static/')
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/images/') 
   ) {
     return NextResponse.next();
   }

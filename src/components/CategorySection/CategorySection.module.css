@@ -1,0 +1,50 @@
+.overflowHidden {
+    overflow: hidden;
+  }
+  
+  .roundedImage {
+    border-radius: 50%;
+  }
+  
+  .btnYellow {
+    background-color: yellow;
+    color: black;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 5px;
+  }
+  
+  .swiperSlide {
+    text-align: center;
+  }
+  
+  .categoryTitle {
+    font-weight: normal;
+  }
+  .overflowHidden {
+    overflow: hidden;
+  }
+  
+  .scrollableCategories {
+    display: flex; /* Use flexbox for horizontal layout */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 10px 0; /* Add padding for better spacing */
+    white-space: nowrap; /* Prevent line breaks */
+  }
+  
+  .categoryItem {
+    display: inline-block; /* Ensure each item is inline */
+    margin-right: 16px; /* Space between items */
+    text-align: center; /* Center the text */
+  }
+  
+  .roundedImage {
+    border-radius: 50%; /* Optional styling for the image */
+  }
+  
+  .btnYellow {
+    background-color: yellow; /* Example styling for buttons */
+    color: black;
+  }
+  
