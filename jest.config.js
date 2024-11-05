@@ -5,4 +5,7 @@ module.exports = {
     moduleNameMapper: {
       '\\.(scss|sass|css)$': 'identity-obj-proxy',
     },
+    transform: {
+      '^.+\\.(t|j)sx?$': ['@swc/jest'],
+    },
   };
