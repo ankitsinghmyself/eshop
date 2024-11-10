@@ -7,7 +7,7 @@ import { RootState } from "@/utils/redux/store";
 import { Box, TextField, Button, Typography, Grid } from "@mui/material";
 import Image from "next/image";
 import eshop_Login_img from "../../../../public/images/auth/eshop_login.webp";
-import logo from "../../../../public/logo.webp";
+import logo from "../../../../../public/logo.webp";
 import styles from "@/styles/auth/LoginPage.module.scss";
 
 export default function SignIn() {

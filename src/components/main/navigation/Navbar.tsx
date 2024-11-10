@@ -18,9 +18,10 @@ import { Badge, Menu, MenuItem } from "@mui/material";
 import useAuthCheck from "@/hooks/useAuthCheck";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import logo from "../../../public/logo.webp";
+import logo from "../../../../public/logo.webp";
 import { removeCartItem } from "@/utils/redux/cart/cartThunks";
 import { AppDispatch } from "@/utils/redux/store";
+import { useLogout } from "@/hooks/useLogout";
 
 const pages = [{ name: "Home", href: "/" }];
 
@@ -30,6 +31,7 @@ export default function Navbar() {
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, userData } = useAuthCheck();
+  const { handleLogout, loading } = useLogout();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -62,29 +64,7 @@ export default function Navbar() {
     }
   }, [dispatch, isAuthenticated]);
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Logged out successfully:", data.message);
-        window.location.href = "/";
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-      toast.error("Error during logout.");
-    }
-  };
-
+  
   return (
     <AppBar
       position="fixed"
@@ -191,7 +171,8 @@ export default function Navbar() {
                   <MenuItem onClick={handleMenuClose}>
                     <Link href="/dashboard">Dashboard</Link>
                   </MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>{loading ? "Logging out..." : "Logout"}
+                  </MenuItem>
                 </Menu>
               </Box>
             ) : (

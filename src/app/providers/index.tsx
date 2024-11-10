@@ -1,6 +1,6 @@
 "use client";
 import Footer from "@/components/common/Footer";
-import Navbar from "@/components/navigation/Navbar";
+import Navbar from "@/components/main/navigation/Navbar";
 import store from "@/utils/redux/store";
 import { createTheme, ThemeProvider } from "@mui/material";
 

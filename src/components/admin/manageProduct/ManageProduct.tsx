@@ -1,6 +1,7 @@
 // pages/admin/manage-product.tsx
 import React, { useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Checkbox,
@@ -9,12 +10,14 @@ import {
   Grid,
   List,
   ListItem,
+  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 interface Product {
   id: number;
@@ -205,22 +208,48 @@ const ManageProduct: React.FC = () => {
             )}
           </Box>
         </Grid>
-        <Grid item xs={6} sm={6}>
+
+        <Grid item xs={12} sm={6}>
           <List>
             {products.map((product) => (
               <ListItem key={product.id} divider>
+                {/* Product Image */}
+                <ListItemIcon>
+                  <Avatar
+                    variant="rounded"
+                    src={product.img}
+                    alt={product.name}
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      objectFit: "cover",
+                    }}
+                  />
+                </ListItemIcon>
+
+                {/* Product Details */}
                 <ListItemText
                   primary={product.name}
-                  secondary={`Price: $${product.price}, Quantity: ${product.quantity}, Active: ${product.isActive}, Author ID: ${product.authorId}`}
+                  secondary={`Price: $${product.price}, Quantity: ${
+                    product.quantity
+                  }, Active: ${product.isActive ? "Yes" : "No"}`}
+                  sx={{ paddingLeft: 2 }}
                 />
+
+                {/* Action Buttons */}
                 <ListItemSecondaryAction>
                   <Button
+                    variant="contained"
+                    size="small"
                     color="primary"
                     onClick={() => handleEditProduct(product)}
+                    sx={{ marginRight: 1 }}
                   >
                     Edit
                   </Button>
                   <Button
+                    variant="contained"
+                    size="small"
                     color="secondary"
                     onClick={() => handleDeleteProduct(product.id)}
                   >
