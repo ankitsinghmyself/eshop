@@ -25,7 +25,7 @@ import { removeCartItem, saveCartItems } from "@/utils/redux/cart/cartThunks";
 import toast from "react-hot-toast";
 import useAuthCheck from "@/hooks/useAuthCheck";
 import Link from "next/link";
-import PrimaryButton from "../common/buttons/PrimaryButton";
+import PrimaryButton from "@/components/common/buttons/PrimaryButton";
 
 const Cart: React.FC = () => {
   const items = useSelector((state: RootState) => state.cart.items || []);

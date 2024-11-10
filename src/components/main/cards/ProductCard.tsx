@@ -14,7 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
-import AddToCart from "@/components/cart/AddToCart";
+import AddToCart from "../cart/AddToCart";
 
 interface ProductCardProps {
   id: string;

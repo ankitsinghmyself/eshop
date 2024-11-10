@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import ProductCard from '../main/cards/ProductCard';
 import { Product } from '@/types/types';
+import ProductCard from '../cards/ProductCard';
 
 interface ProductsListProps {
   products: Product[]; 

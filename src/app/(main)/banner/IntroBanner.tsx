@@ -2,7 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import { Product } from "@/types/types";
 import styles from "@/styles/banners/IntroBanner.module.css";
-import IntroBannerCard from "@/components/banners/IntroBannerCard";
+import IntroBannerCard from "@/components/main/banners/IntroBannerCard";
 
 interface ProductsSliderProps {
   products: Product[];

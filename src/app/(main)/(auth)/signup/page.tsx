@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Box, TextField, Button, Typography, Grid } from "@mui/material";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import logo from "../../../../public/logo.webp";
+import logo from "../../../../../public/logo.webp";
 import styles from "@/styles/auth/LoginPage.module.scss";
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");

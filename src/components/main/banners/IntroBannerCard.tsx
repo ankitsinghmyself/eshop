@@ -3,7 +3,7 @@ import { Product } from "@/types/types";
 import styles from "@/styles/banners/IntroBanner.module.css";
 import Image from "next/image";
 import AddToCart from "../cart/AddToCart";
-import PrimaryButton from "../common/buttons/PrimaryButton";
+import PrimaryButton from "@/components/common/buttons/PrimaryButton";
 
 interface IntroBannerCardProps extends Product {}
 

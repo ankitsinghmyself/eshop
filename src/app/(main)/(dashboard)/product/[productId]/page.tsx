@@ -4,11 +4,11 @@ import { useParams, useRouter } from "next/navigation";
 import { Typography, Container, Button, Grid } from "@mui/material";
 import useProductDetails from "@/hooks/useProductDetails";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
-import AddToCart from "@/components/cart/AddToCart";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
 import Image from "next/image";
 import Link from "next/link";
 import BackButton from "@/components/common/buttons/BackButton";
+import AddToCart from "@/components/main/cart/AddToCart";
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams(); // Access dynamic route parameters
