@@ -1,0 +1,128 @@
+
+  .card {
+    width: 300px;
+    height: 400px;
+    background-color: #e9f5e3;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #61a146;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: ease-in-out 0.4s;
+  }
+  .cardimage {
+    height: 200px;
+    overflow: hidden;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+  }
+  .cardimage > img {
+    border-radius: 8px;
+    height: 200px;
+    object-fit: cover;
+  }
+  .card:hover {
+    scale: 1.05;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px #82bd69;
+    transition: ease-in-out 0.4s;
+  }
+  .cardcontent {
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px 0 12px;
+    height: 200px;
+  }
+  .cardbuttons {
+    min-width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .atc-btn {
+    width: 85%;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d3eac8;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #82bd69;
+    transition: ease-in-out 0.3s;
+  }
+  .atc-btn > img {
+    height: 20px;
+  }
+  .wl-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d3eac8;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #82bd69;
+    transition: ease-in-out 0.3s;
+  }
+  .wl-btn > img {
+    height: 20px;
+  }
+  .productname {
+    font-size: 16px;
+    color: #2b4522;
+    height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    margin: 0;
+  }
+  .cardheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+  }
+  .productcode {
+    font-size: 10px;
+    font-weight: bold;
+    color: #3d692c;
+  }
+  .productrating {
+    color: #3d692c;
+    font-weight: bold;
+    display: flex;
+  }
+  .productrating > img {
+    height: 15px;
+  }
+  .productprice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 50px;
+  }
+  .discountedprice {
+    font-weight: bold;
+    font-size: 32px;
+    height: max-content;
+    color: #2b4522;
+  }
+  .originalprice {
+    font-size: 16px;
+    text-decoration: line-through;
+    color: #61a146;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #afd89d;
+    transition: ease-in-out 0.3s;
+  }
+  

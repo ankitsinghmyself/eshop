@@ -11,10 +11,10 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#556cd6",
+        main: "#fff",
       },
       secondary: {
-        main: "#19857b",
+        main: "#61a146",
       },
       background: {
         default: "#f5f5f5",
