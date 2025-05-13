@@ -22,6 +22,7 @@ import logo from "../../../../public/logo.webp";
 import { removeCartItem } from "@/utils/redux/cart/cartThunks";
 import { AppDispatch } from "@/utils/redux/store";
 import { useLogout } from "@/hooks/useLogout";
+import SignInModal from "@/components/auth/SignInModal";
 
 const pages = [{ name: "Home", href: "/" }];
 
@@ -32,6 +33,7 @@ export default function Navbar() {
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, userData } = useAuthCheck();
   const { handleLogout, loading } = useLogout();
+  const [openSignIn, setOpenSignIn] = useState(false);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -64,81 +66,41 @@ export default function Navbar() {
     }
   }, [dispatch, isAuthenticated]);
 
-  
+
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        background: "var(--primary-gradient)",
-      }}
-    >
-      <Toolbar>
-        <Box
-          sx={{
-            display: { xs: "flex", md: "none" },
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <IconButton
-            size="large"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            color="inherit"
+    <>
+      <AppBar
+        position="fixed"
+        sx={{
+          background: "var(--primary-gradient)",
+        }}
+      >
+        <Toolbar>
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
+              justifyContent: "space-between",
+              width: "100%",
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Link href="/" passHref>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+            <IconButton
+              size="large"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              color="inherit"
             >
-              <Image src={logo} alt="Logo" width={56} height={56} />
-            </Typography>
-          </Link>
-          <Link href="/cart" passHref>
-            <IconButton size="large" aria-label="cart" color="inherit">
-              <Badge
-                badgeContent={totalItems}
-                sx={{
-                  "& .MuiBadge-badge": {
-                    backgroundColor: "var(--secondary-color)",
-                    color: "white",
-                  },
-                }}
-              >
-                <ShoppingCartIcon />
-              </Badge>
+              <MenuIcon />
             </IconButton>
-          </Link>
-        </Box>
-
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Link href="/">
-            <Typography variant="h6" noWrap component="div">
-              <Image src={logo} alt="Logo" width={56} height={56} />
-            </Typography>
-          </Link>
-
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                href={page.href}
-                sx={{ my: 2, color: "white", display: "block" }}
+            <Link href="/" passHref>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ flexGrow: 1, textAlign: "center" }}
               >
-                {page.name}
-              </Button>
-            ))}
+                <Image src={logo} alt="Logo" width={56} height={56} />
+              </Typography>
+            </Link>
             <Link href="/cart" passHref>
               <IconButton size="large" aria-label="cart" color="inherit">
                 <Badge
@@ -154,84 +116,130 @@ export default function Navbar() {
                 </Badge>
               </IconButton>
             </Link>
-
-            {isAuthenticated ? (
-              <Box sx={{ ml: 2 }}>
-                <Button onMouseEnter={handleMenuOpen} sx={{ color: "white" }}>
-                  {userData.firstName}
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  MenuListProps={{
-                    onMouseLeave: handleMenuClose,
-                  }}
-                >
-                  <MenuItem onClick={handleMenuClose}>
-                    <Link href="/dashboard">Dashboard</Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>{loading ? "Logging out..." : "Logout"}
-                  </MenuItem>
-                </Menu>
-              </Box>
-            ) : (
-              <Link href="/signin" passHref>
-                <Button sx={{ my: 2, color: "white", display: "block" }}>
-                  Sign In
-                </Button>
-              </Link>
-            )}
           </Box>
-        </Box>
 
-        <Drawer
-          anchor="left"
-          open={drawerOpen}
-          onClose={handleDrawerClose}
-          PaperProps={{
-            sx: {
-              width: "80%",
-            },
-          }}
-        >
           <Box
-            role="presentation"
-            onClick={handleDrawerClose}
-            onKeyDown={handleDrawerClose}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            <List>
+            <Link href="/">
+              <Typography variant="h6" noWrap component="div">
+                <Image src={logo} alt="Logo" width={56} height={56} />
+              </Typography>
+            </Link>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               {pages.map((page) => (
-                <Link href={page.href} key={page.name}>
-                  <ListItem button>
-                    <ListItemText primary={page.name} />
-                  </ListItem>
-                </Link>
+                <Button
+                  key={page.name}
+                  href={page.href}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
               ))}
-            </List>
-            {isAuthenticated ? (
-              <List>
-                <Link href="/dashboard">
-                  <ListItem button>
-                    <ListItemText primary="Dashboard" />
-                  </ListItem>
-                </Link>
-                <ListItem button onClick={handleLogout}>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              </List>
-            ) : (
-              <List>
-                <Link href="/signin">
-                  <ListItem button>
-                    <ListItemText primary="Sign In" />
-                  </ListItem>
-                </Link>
-              </List>
-            )}
+              <Link href="/cart" passHref>
+                <IconButton size="large" aria-label="cart" color="inherit">
+                  <Badge
+                    badgeContent={totalItems}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "var(--secondary-color)",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+              </Link>
+
+              {isAuthenticated ? (
+                <Box sx={{ ml: 2 }}>
+                  <Button onMouseEnter={handleMenuOpen} sx={{ color: "white" }}>
+                    {userData.firstName}
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                      onMouseLeave: handleMenuClose,
+                    }}
+                  >
+                    <MenuItem onClick={handleMenuClose}>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>{loading ? "Logging out..." : "Logout"}
+                    </MenuItem>
+                  </Menu>
+                </Box>
+              ) : (
+                <Button
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    onClick={() => setOpenSignIn(true)}
+                  >
+                    Sign In
+                  </Button>
+              )}
+            </Box>
           </Box>
-        </Drawer>
-      </Toolbar>
-    </AppBar>
+
+          <Drawer
+            anchor="left"
+            open={drawerOpen}
+            onClose={handleDrawerClose}
+            PaperProps={{
+              sx: {
+                width: "80%",
+              },
+            }}
+          >
+            <Box
+              role="presentation"
+              onClick={handleDrawerClose}
+              onKeyDown={handleDrawerClose}
+            >
+              <List>
+                {pages.map((page) => (
+                  <Link href={page.href} key={page.name}>
+                    <ListItem button>
+                      <ListItemText primary={page.name} />
+                    </ListItem>
+                  </Link>
+                ))}
+              </List>
+              {isAuthenticated ? (
+                <List>
+                  <Link href="/dashboard">
+                    <ListItem button>
+                      <ListItemText primary="Dashboard" />
+                    </ListItem>
+                  </Link>
+                  <ListItem button onClick={handleLogout}>
+                    <ListItemText primary="Logout" />
+                  </ListItem>
+                </List>
+              ) : (
+                <List>
+                  <Button
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    onClick={() => setOpenSignIn(true)}
+                  >
+                    Sign In
+                  </Button>
+                </List>
+              )}
+            </Box>
+          </Drawer>
+        </Toolbar>
+      </AppBar>
+      <SignInModal open={openSignIn} onClose={() => setOpenSignIn(false)} />
+    </>
+
   );
 }

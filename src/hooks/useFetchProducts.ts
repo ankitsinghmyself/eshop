@@ -22,10 +22,10 @@ const useFetchProducts = (): UseFetchProductsResult => {
       try {
         const response = await fetch('/api/products/getAllProducts');
         if (!response.ok) {
-          throw new Error('Failed to fetch products');
+          throw new Error('Unable to fetch products. Please ensure MongoDB is running and accessible.');
         }
         const data = await response.json();
-        setProducts(data); // Assuming `data` is the array of products
+        setProducts(data); 
       } catch (error) {
         setError((error as Error).message);
       } finally {
