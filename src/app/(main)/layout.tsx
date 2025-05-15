@@ -18,7 +18,6 @@ export default async function RootLayout({
         <Providers>
           <div
             style={{
-              padding: "6rem 2rem",
               background: "var(--primary-glow)",
             }}
           >

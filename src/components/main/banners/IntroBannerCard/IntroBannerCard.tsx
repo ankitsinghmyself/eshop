@@ -2,8 +2,8 @@ import React from "react";
 import { Product } from "@/types/types";
 import styles from "@/styles/banners/IntroBanner.module.css";
 import Image from "next/image";
-import AddToCart from "../cart/AddToCart";
 import PrimaryButton from "@/components/common/buttons/PrimaryButton";
+import AddToCart from "../../cart/AddToCart";
 
 interface IntroBannerCardProps extends Product {}
 
@@ -15,22 +15,25 @@ const IntroBannerCard: React.FC<IntroBannerCardProps> = ({
 }) => {
   return (
     <div className={styles.card}>
-      <div className={styles.imageContainer}>
+      <div className={styles.imageWrapper}>
         <Image
           src={img}
           alt={name}
           className={styles.image}
-          width={400}
-          height={400}
-          style={{ width: "100%" }}
+          width={600}
+          height={600}
+          priority
         />
+        <div className={styles.gradientOverlay} />
         <div className={styles.info}>
           <h3 className={styles.name}>{name}</h3>
           <p className={styles.price}>₹{price.toFixed(2)}</p>
-          <AddToCart data={{ id, name, price, img, quantity: 1 }} />
-          <PrimaryButton onClick={()=>window.location.href = `/product/${id}`}>
-            Shop Now
-          </PrimaryButton>
+          <div className={styles.buttons}>
+            <AddToCart data={{ id, name, price, img, quantity: 1 }} />
+            <PrimaryButton onClick={() => (window.location.href = `/product/${id}`)}>
+              Shop Now
+            </PrimaryButton>
+          </div>
         </div>
       </div>
     </div>

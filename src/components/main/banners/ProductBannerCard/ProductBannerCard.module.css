@@ -1,0 +1,111 @@
+.card {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: rgba(255 255 255 / 0.1);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  min-height: 420px;
+  max-width: 350px;
+  margin: auto;
+}
+.card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+.image-wrapper {
+  position: relative;
+  height: 250px;
+  width: 100%;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  box-shadow: inset 0 4px 10px rgba(255, 255, 255, 0.6);
+}
+.product-image {
+  border-radius: 1.5rem 1.5rem 0 0;
+  transition: transform 0.4s ease;
+}
+.card:hover .product-image {
+  transform: scale(1.07);
+}
+.info {
+  padding: 1.8rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+.product-name {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #111827;
+  line-height: 1.2;
+  margin: 0;
+  flex-grow: 0;
+  user-select: none;
+}
+.product-price {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #ef4444; /* red-500 */
+  user-select: none;
+}
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
+}
+.btn {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+.btn-primary {
+  background-color: #ef4444;
+  color: white;
+  box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
+}
+.btn-primary:hover {
+  background-color: #dc2626;
+  box-shadow: 0 12px 20px rgba(220, 38, 38, 0.45);
+}
+.btn-outline {
+  border: 2px solid #ef4444;
+  color: #ef4444;
+  background-color: transparent;
+}
+.btn-outline:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+@media (max-width: 480px) {
+  .card {
+    max-width: 100%;
+    min-height: 380px;
+  }
+  .product-name {
+    font-size: 1.3rem;
+  }
+  .product-price {
+    font-size: 1.1rem;
+  }
+  .btn {
+    font-size: 0.9rem;
+  }
+}

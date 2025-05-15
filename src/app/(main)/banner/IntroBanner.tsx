@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import { Product } from "@/types/types";
 import styles from "@/styles/banners/IntroBanner.module.css";
 import IntroBannerCard from "@/components/main/banners/IntroBannerCard";
+import ProductBannerCard from "@/components/main/banners/ProductBannerCard";
 
 interface ProductsSliderProps {
   products: Product[];
@@ -33,7 +34,7 @@ const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -60,11 +61,18 @@ const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
 
   return (
     <div className={styles.sliderContainer}>
-      {/* <h2 className={styles.sliderHeading}>Featured Products</h2> */}
+      <h2 className={styles.sliderHeading}>Featured Products</h2>
       <Slider {...settings}>
-        {products.slice(1, 4).map((product) => (
+        {products.slice(1, 8).map((product) => (
           <div key={product.id} className={styles.slickSlide}>
-            <IntroBannerCard {...product} />
+            {/* <IntroBannerCard {...product} /> */}
+            <ProductBannerCard
+              product={product}
+              onAddToCart={() => console.log("Add to cart clicked")}
+              onShopNow={() =>
+                (window.location.href = `/product/${product.id}`)
+              }
+            />
           </div>
         ))}
       </Slider>

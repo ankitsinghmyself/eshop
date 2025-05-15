@@ -6,6 +6,7 @@ import useFetchProducts from "@/hooks/useFetchProducts";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
 import CategorySection from "@/components/main/CategorySection/CategorySection";
 import ProductsList from "@/components/main/products/ProductsList";
+import ShopIntroBanner from "@/components/main/banners/ShopIntroBanner";
 export default function Home() {
   const { products, loading, error } = useFetchProducts();
 
@@ -23,9 +24,10 @@ export default function Home() {
 
   return (
     <>
+      <ShopIntroBanner onShopNowClick={() => console.log("Shop Now clicked")} />
       <IntroBanner products={products} />
       <ProductsList products={products} />
-      <CategorySection/>
+      <CategorySection />
     </>
   );
 }
