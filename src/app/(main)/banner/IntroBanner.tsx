@@ -1,82 +1,74 @@
-import React from "react";
-import Slider from "react-slick";
-import { Product } from "@/types/types";
-import styles from "@/styles/banners/IntroBanner.module.css";
-import IntroBannerCard from "@/components/main/banners/IntroBannerCard";
-import ProductBannerCard from "@/components/main/banners/ProductBannerCard";
+import React from 'react';
+import { Box, Typography, Container, useTheme } from '@mui/material';
+import { Product } from '@/types/types';
+import ProductCard from '@/components/main/cards/ProductCard';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface ProductsSliderProps {
   products: Product[];
 }
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "none" }}
-      onClick={onClick}
-    />
-  );
-}
 
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "none" }}
-      onClick={onClick}
-    />
-  );
-}
 const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    autoplay: true,
+  const theme = useTheme();
 
-    autoplaySpeed: 2000,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  const handleAddToCart = async (product: Product) => {
+    try {
+      const response = await fetch('/api/cart/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: product.id, quantity: 1 }),
+      });
+      if (!response.ok) throw new Error('Failed to add to cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   return (
-    <div className={styles.sliderContainer}>
-      <h2 className={styles.sliderHeading}>Featured Products</h2>
-      <Slider {...settings}>
-        {products.slice(1, 8).map((product) => (
-          <div key={product.id} className={styles.slickSlide}>
-            {/* <IntroBannerCard {...product} /> */}
-            <ProductBannerCard
-              product={product}
-              onAddToCart={() => console.log("Add to cart clicked")}
-              onShopNow={() =>
-                (window.location.href = `/product/${product.id}`)
-              }
-            />
-          </div>
-        ))}
-      </Slider>
-    </div>
+    <Box sx={{ py: 6, backgroundColor: theme.palette.background.paper }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h3"
+          component="h2"
+          sx={{
+            textAlign: 'center',
+            mb: 4,
+            fontWeight: 700,
+            color: theme.palette.text.primary,
+          }}
+        >
+          Featured Products
+        </Typography>
+        
+        <Swiper
+          modules={[Autoplay, Pagination]}
+          spaceBetween={24}
+          slidesPerView={1}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          pagination={{ clickable: true }}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+          }}
+          style={{
+            paddingBottom: '40px',
+          }}
+        >
+          {products.slice(0, 8).map((product) => (
+            <SwiperSlide key={product.id}>
+              <ProductCard
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Container>
+    </Box>
   );
 };
 

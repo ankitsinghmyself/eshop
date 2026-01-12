@@ -1,68 +1,89 @@
 import React from 'react';
-import { Container, Typography, Button, Box } from '@mui/material';
-import Image from 'next/image'; // Import Next.js Image component
-import styles from './CategorySection.module.css'; // CSS module for custom styling
+import { 
+  Container, 
+  Typography, 
+  Button, 
+  Box, 
+  Grid, 
+  Card, 
+  CardContent, 
+  CardMedia,
+  useTheme 
+} from '@mui/material';
+import { ArrowForward } from '@mui/icons-material';
+import Image from 'next/image';
 
-// Define the category type
 interface Category {
   title: string;
   imgSrc: string;
+  count?: number;
 }
 
-// Sample category data
 const categories: Category[] = [
-  { title: 'Fruits & Veges', imgSrc: '/images/category-thumb-1.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-2.jpg' },
-  { title: 'Beverages', imgSrc: '/images/category-thumb-4.jpg' },
-  { title: 'Meat Products', imgSrc: '/images/category-thumb-5.jpg' },
-  { title: 'Breads', imgSrc: '/images/category-thumb-6.jpg' },
-  { title: 'Fruits & Veges', imgSrc: '/images/category-thumb-7.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
+  { title: 'Electronics', imgSrc: '/images/category-thumb-1.jpg', count: 245 },
+  { title: 'Fashion', imgSrc: '/images/category-thumb-2.jpg', count: 189 },
+  { title: 'Home & Garden', imgSrc: '/images/category-thumb-3.jpg', count: 156 },
+  { title: 'Sports', imgSrc: '/images/category-thumb-4.jpg', count: 98 },
+  { title: 'Books', imgSrc: '/images/category-thumb-5.jpg', count: 234 },
+  { title: 'Beauty', imgSrc: '/images/category-thumb-6.jpg', count: 167 },
 ];
 
 const CategorySection: React.FC = () => {
+  const theme = useTheme();
+
   return (
-    <Box py={5} className={styles.overflowHidden}>
-      <Container maxWidth="xl">
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
-          <Typography variant="h4" component="h2">
-            Category
-          </Typography>
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h3" component="h2" sx={{ fontWeight: 700 }}>
+          Shop by Category
+        </Typography>
+        <Button 
+          variant="outlined" 
+          endIcon={<ArrowForward />}
+          sx={{ textTransform: 'none', fontWeight: 600 }}
+        >
+          View All Categories
+        </Button>
+      </Box>
 
-          <Box display="flex" alignItems="center">
-            <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
-              View All
-            </Button>
-            <Box>
-              <Button className={styles.btnYellow}>&#x276E;</Button>
-              <Button className={styles.btnYellow}>&#x276F;</Button>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Scrollable Categories */}
-        <Box className={styles.scrollableCategories}>
-          {categories.map((category, index) => (
-            <Box key={index} className={styles.categoryItem}>
-              <Image
-                src={category.imgSrc} // Corrected the image path
-                alt={`${category.title} Thumbnail`}
-                width={150} // Specify width
-                height={150} // Specify height
-                className={styles.roundedImage} // Optional styling for the image
-              />
-              <Typography variant="h6" component="h4" mt={3} className={styles.categoryTitle}>
-                {category.title}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-      </Container>
-    </Box>
+      <Grid container spacing={3}>
+        {categories.map((category, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={2} key={index}>
+            <Card
+              sx={{
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-8px)',
+                  boxShadow: theme.shadows[8],
+                },
+                textAlign: 'center',
+                border: `1px solid ${theme.palette.divider}`,
+              }}
+            >
+              <CardMedia sx={{ position: 'relative', height: 120, overflow: 'hidden' }}>
+                <Image
+                  src={category.imgSrc}
+                  alt={category.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </CardMedia>
+              <CardContent sx={{ p: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                  {category.title}
+                </Typography>
+                {category.count && (
+                  <Typography variant="body2" color="text.secondary">
+                    {category.count} items
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 };
 

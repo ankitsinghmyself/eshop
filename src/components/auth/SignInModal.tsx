@@ -1,4 +1,3 @@
-// components/auth/SignInModal.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,12 +7,12 @@ import {
     Button,
     Typography,
     Dialog,
-    DialogContent,
     IconButton,
-    DialogTitle,
+    useTheme,
+    Divider,
+    Alert,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import toast from "react-hot-toast";
+import { Close, Login, PersonAdd, Storefront } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import SignUpModal from "./SignUpModal";
@@ -21,14 +20,16 @@ import SignUpModal from "./SignUpModal";
 interface SignInModalProps {
     open: boolean;
     onClose: () => void;
-    switchToSignUp?: () => void; // Make optional if not always needed
 }
 
 export default function SignInModal({ open, onClose }: SignInModalProps) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showSignUp, setShowSignUp] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
     const items = useSelector((state: RootState) => state.cart.items);
+    const theme = useTheme();
 
     const handleSaveCart = async () => {
         if (items.length > 0) {
@@ -38,15 +39,16 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ items }),
                 });
-                toast.success("Cart items saved successfully!");
             } catch (error) {
-                toast.error("Error saving cart items.");
+                console.error("Error saving cart items:", error);
             }
         }
     };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
+        setError("");
 
         try {
             const response = await fetch("/api/auth/login", {
@@ -58,29 +60,30 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
             const data = await response.json();
 
             if (response.ok) {
-                toast.success(data.message);
                 await handleSaveCart();
                 window.location.href = "/dashboard";
             } else {
-                toast.error(data.message || "Sign in failed.");
+                setError(data.message || "Sign in failed.");
             }
         } catch (error) {
-            toast.error("Sign in failed.");
+            setError("Sign in failed.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Handle closing both modals
     const handleCloseAll = () => {
         setShowSignUp(false);
         onClose();
+        setEmail("");
+        setPassword("");
+        setError("");
     };
 
-    // Switch to SignUp modal
     const handleSwitchToSignUp = () => {
         setShowSignUp(true);
     };
 
-    // Switch back to SignIn modal from SignUp
     const handleSwitchToSignIn = () => {
         setShowSignUp(false);
     };
@@ -90,183 +93,98 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
             <Dialog
                 open={open && !showSignUp}
                 onClose={onClose}
+                maxWidth="sm"
                 fullWidth
-                maxWidth="xs"
                 PaperProps={{
                     sx: {
-                        borderRadius: 5,
-                        background: "linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)",
-                        boxShadow: "0 8px 32px 0 rgba(25, 118, 210, 0.25)",
-                        border: "1.5px solid var(--secondary-color)",
+                        borderRadius: 3,
                         overflow: "hidden",
                     },
                 }}
             >
-                <DialogTitle sx={{ p: 0 }}>
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        px={4}
-                        pt={3}
-                        pb={1}
+                <Box sx={{ position: 'relative', p: 4 }}>
+                    <IconButton
+                        onClick={onClose}
                         sx={{
-                            background: "linear-gradient(90deg, var(--secondary-color) 60%, var(--primary-color) 100%)",
-                            borderTopLeftRadius: 20,
-                            borderTopRightRadius: 20,
+                            position: 'absolute',
+                            top: 16,
+                            right: 16,
+                            color: theme.palette.text.secondary,
                         }}
                     >
-                        <Typography
-                            variant="h5"
-                            fontWeight={800}
-                            sx={{
-                                color: "#fff",
-                                letterSpacing: 1.5,
-                                textShadow: "0 2px 8pxrgba(96, 106, 117, 0.6)",
-                            }}
-                        >
-                            Sign In
+                        <Close />
+                    </IconButton>
+
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                        <Storefront sx={{ fontSize: 48, color: theme.palette.primary.main, mb: 2 }} />
+                        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                            Welcome Back
                         </Typography>
-                        <IconButton onClick={onClose} size="large" sx={{ color: "#fff" }}>
-                            <CloseIcon />
-                        </IconButton>
+                        <Typography variant="body1" color="text.secondary">
+                            Sign in to your ShopMate account
+                        </Typography>
                     </Box>
-                </DialogTitle>
-                <DialogContent sx={{ p: 4, pt: 4 }}>
-                    <Box
-                        component="form"
-                        onSubmit={handleLoginSubmit}
-                        noValidate
-                        sx={{
-                            background: "#fff",
-                            borderRadius: 4,
-                            boxShadow: "0 2px 16px 0 #1976d21a",
-                            p: 3,
-                            border: "1px solid #e3eafc",
-                            mt: 3,
-                            mb: 2,
-                            zIndex: 1,
-                            position: "relative",
-                        }}
-                    >
+
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 3 }}>
+                            {error}
+                        </Alert>
+                    )}
+
+                    <Box component="form" onSubmit={handleLoginSubmit}>
                         <TextField
+                            fullWidth
+                            label="Email Address"
                             type="email"
-                            label="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            fullWidth
                             margin="normal"
                             required
-                            autoFocus
-                            InputProps={{
-                                sx: {
-                                    borderRadius: 2.5,
-                                    background: "#f0f4ff",
-                                    fontSize: "1.05rem",
-                                    boxShadow: "0 1px 4px 0 #1976d211",
-                                    px: 1,
-                                },
-                            }}
-                            InputLabelProps={{
-                                sx: {
-                                    color: "var(--secondary-color)",
-                                    fontWeight: 600,
-                                    letterSpacing: 0.5,
-                                    "&.Mui-focused": {
-                                        color: "var(--secondary-color)",
-                                    },
-                                },
-                            }}
+                            disabled={loading}
                         />
+                        
                         <TextField
-                            type="password"
+                            fullWidth
                             label="Password"
+                            type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            fullWidth
                             margin="normal"
                             required
-                            InputProps={{
-                                sx: {
-                                    borderRadius: 2.5,
-                                    background: "#f0f4ff",
-                                    fontSize: "1.05rem",
-                                    boxShadow: "0 1px 4px 0 #1976d211",
-                                    px: 1,
-                                },
-                            }}
-                            InputLabelProps={{
-                                sx: {
-                                    color: "var(--secondary-color)",
-                                    fontWeight: 600,
-                                    letterSpacing: 0.5,
-                                    "&.Mui-focused": {
-                                        color: "var(--secondary-color)",
-                                    },
-                                },
-                            }}
+                            disabled={loading}
                         />
+                        
                         <Button
                             type="submit"
-                            variant="contained"
-                            color="primary"
                             fullWidth
-                            sx={{
-                                mt: 3,
-                                py: 1.7,
-                                borderRadius: 3,
-                                fontWeight: 800,
-                                fontSize: "1.08rem",
-                                textTransform: "none",
-                                background: "linear-gradient(90deg, var(--secondary-color) 60%, var(--primary-color) 100%)",
-                                boxShadow: "0 4px 24px 0 #1976d233",
-                                letterSpacing: 0.5,
-                                transition: "background 0.3s",
-                                "&:hover": {
-                                    background: "linear-gradient(90deg, var(--primary-color) 60%, var(--secondary-color) 100%)",
-                                    boxShadow: "0 6px 32px 0 #1976d244",
-                                },
-                            }}
+                            variant="contained"
+                            size="large"
+                            disabled={loading || !email || !password}
+                            startIcon={<Login />}
+                            sx={{ mt: 3, mb: 2, py: 1.5 }}
                         >
-                            Sign In
+                            {loading ? 'Signing In...' : 'Sign In'}
                         </Button>
                     </Box>
-                    <Typography
-                        sx={{
-                            mt: 3,
-                            textAlign: "center",
-                            color: "#444",
-                            fontWeight: 600,
-                            letterSpacing: 0.3,
-                            fontSize: "1.02rem",
-                            textShadow: "0 1px 4px #1976d211",
-                        }}
-                        variant="body2"
-                    >
-                        Don&apos;t have an account?{" "}
+                    
+                    <Divider sx={{ my: 3 }} />
+                    
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Don't have an account?
+                        </Typography>
                         <Button
+                            variant="outlined"
                             onClick={handleSwitchToSignUp}
-                            sx={{
-                                color: "#444",
-                                fontWeight: 700,
-                                textDecoration: "underline",
-                                letterSpacing: 0.5,
-                                background: "none",
-                                boxShadow: "none",
-                                p: 0,
-                                minWidth: "unset",
-                                fontSize: "inherit",
-                                "&:hover": {
-                                    background: "none",
-                                    textDecoration: "underline",
-                                },
-                            }}
+                            startIcon={<PersonAdd />}
+                            sx={{ textTransform: 'none' }}
                         >
-                            Sign up here
+                            Create Account
                         </Button>
-                    </Typography>
-                </DialogContent>
+                    </Box>
+                </Box>
             </Dialog>
+            
             <SignUpModal
                 open={showSignUp}
                 onClose={handleCloseAll}
