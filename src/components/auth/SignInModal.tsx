@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     TextField,
@@ -28,11 +28,16 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
     const [showSignUp, setShowSignUp] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [mounted, setMounted] = useState(false);
     const items = useSelector((state: RootState) => state.cart.items);
     const theme = useTheme();
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const handleSaveCart = async () => {
-        if (items.length > 0) {
+        if (mounted && items.length > 0) {
             try {
                 await fetch("/api/cart/save", {
                     method: "POST",
@@ -95,10 +100,11 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
                 onClose={onClose}
                 maxWidth="sm"
                 fullWidth
+                scroll="body"
                 PaperProps={{
                     sx: {
                         borderRadius: 3,
-                        overflow: "hidden",
+                        maxHeight: '90vh',
                     },
                 }}
             >
@@ -124,6 +130,18 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
                             Sign in to your ShopMate account
                         </Typography>
                     </Box>
+
+                    <Alert severity="info" sx={{ mb: 3 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                            Demo Credentials:
+                        </Typography>
+                        <Typography variant="body2">
+                            Email: admin@admin.com
+                        </Typography>
+                        <Typography variant="body2">
+                            Password: admin
+                        </Typography>
+                    </Alert>
 
                     {error && (
                         <Alert severity="error" sx={{ mb: 3 }}>

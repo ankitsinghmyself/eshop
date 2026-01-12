@@ -71,6 +71,18 @@ export default function SignIn() {
           </Typography>
         </Box>
 
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+            Demo Credentials:
+          </Typography>
+          <Typography variant="body2">
+            Email: admin@admin.com
+          </Typography>
+          <Typography variant="body2">
+            Password: admin
+          </Typography>
+        </Alert>
+
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}

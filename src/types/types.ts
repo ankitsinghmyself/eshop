@@ -43,6 +43,7 @@ export interface User {
   emailVerified?: Date | null; // Optional
   image?: string | null; // Optional
   isAdmin: boolean;
+  isSuperAdmin?: boolean; // Optional super admin flag
   password: string; // Required for creation
   createdAt?: Date; // Optional, usually set in the backend
   updatedAt?: Date; // Optional, usually set in the backend

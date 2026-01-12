@@ -410,6 +410,9 @@ const ResponsiveNavbar: React.FC<Props> = ({ darkMode, setDarkMode }) => {
                         <MenuItem disabled sx={{ fontWeight: 500 }}>
                           Hi, {userData?.name || "User"}
                         </MenuItem>
+                        <Link href="/dashboard">
+                          <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
+                        </Link>
                         <MenuItem onClick={handleLogout}>Logout</MenuItem>
                       </>
                     ) : (

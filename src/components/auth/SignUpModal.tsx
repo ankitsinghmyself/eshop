@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     TextField,
@@ -33,15 +33,20 @@ export default function SignUpModal({ open, onClose, switchToSignIn }: SignUpMod
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [mounted, setMounted] = useState(false);
     const items = useSelector((state: RootState) => state.cart.items);
     const theme = useTheme();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSaveCart = async () => {
-        if (items.length > 0) {
+        if (mounted && items.length > 0) {
             try {
                 await fetch("/api/cart/save", {
                     method: "POST",
@@ -98,10 +103,11 @@ export default function SignUpModal({ open, onClose, switchToSignIn }: SignUpMod
             onClose={onClose}
             maxWidth="sm"
             fullWidth
+            scroll="body"
             PaperProps={{
                 sx: {
                     borderRadius: 3,
-                    overflow: "hidden",
+                    maxHeight: '90vh',
                 },
             }}
         >

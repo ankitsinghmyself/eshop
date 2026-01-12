@@ -16,21 +16,29 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { firstName,lastName, username, email, password, isAdmin } = await request.json();
+  const { firstName,lastName, username, email, password, isAdmin, isSuperAdmin } = await request.json();
   
-  // Extract the token from the Authorization header
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  // Get token from cookies
+  const cookieHeader = request.headers.get('cookie');
+  let token = null;
+  
+  if (cookieHeader) {
+    const cookies = cookieHeader.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+    if (tokenCookie) {
+      token = tokenCookie.split('=')[1].trim();
+    }
+  }
+  
+  if (!token) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
 
   try {
     // Verify the token
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
 
-    if (!firstName || !username || !email || !password) {
+    if (!firstName || !email || !password) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -45,6 +53,7 @@ export async function POST(request: Request) {
         email,
         password: hashedPassword,
         isAdmin,
+        isSuperAdmin,
       },
     });
 
@@ -55,37 +64,41 @@ export async function POST(request: Request) {
   }
 }
 export async function PUT(request: Request) {
-  const { id, name, username, email, password, isAdmin } = await request.json();
+  const { id, firstName, lastName, username, email, password, isAdmin, isSuperAdmin } = await request.json();
   
-  // Extract the token from the Authorization header
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  // Get token from cookies
+  const cookieHeader = request.headers.get('cookie');
+  let token = null;
+  
+  if (cookieHeader) {
+    const cookies = cookieHeader.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+    if (tokenCookie) {
+      token = tokenCookie.split('=')[1].trim();
+    }
+  }
+  
+  if (!token) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
 
   try {
     // Verify the token
     const decoded = jwt.verify(token, SECRET_KEY) as { id: string };
-    const authorId = decoded.id;
 
     if (!id) {
       return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
     }
 
     // Hash the password if provided
-    const data: any = { name, username, email, isAdmin };
+    const data: any = { firstName, lastName, username, email, isAdmin, isSuperAdmin };
     if (password) {
       data.password = await bcrypt.hash(password, 10);
     }
 
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: {
-        ...data,
-        authorId,
-      },
+      data,
     });
 
     return NextResponse.json(updatedUser);
@@ -98,13 +111,21 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   const { id } = await request.json();
   
-  // Extract the token from the Authorization header
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  // Get token from cookies
+  const cookieHeader = request.headers.get('cookie');
+  let token = null;
+  
+  if (cookieHeader) {
+    const cookies = cookieHeader.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+    if (tokenCookie) {
+      token = tokenCookie.split('=')[1].trim();
+    }
+  }
+  
+  if (!token) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
-
-  const token = authHeader.split(' ')[1]; // Extract the token from the header
 
   try {
     // Verify the token

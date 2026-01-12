@@ -50,6 +50,7 @@ model User {
   image         String?
   password      String
   isAdmin       Boolean         @default(true) // TODO: chenge to false when required
+  isSuperAdmin  Boolean         @default(false)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Profile       Profile?
