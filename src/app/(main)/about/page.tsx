@@ -41,7 +41,7 @@ export default function About() {
         <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.8, textAlign: 'center', maxWidth: 800, mx: 'auto' }}>
           At ShopMate, we believe shopping should be simple, secure, and enjoyable. 
           Founded with the mission to connect customers with quality products from around the world, 
-          we've built a platform that prioritizes your satisfaction and convenience.
+          we&apos;ve built a platform that prioritizes your satisfaction and convenience.
         </Typography>
       </Box>
 

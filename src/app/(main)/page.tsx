@@ -63,7 +63,9 @@ export default function Home() {
 
   if (products.length === 0) {
     return (
-      <Section title="No products available" subtitle="Check back soon for new arrivals!" py={8} />
+      <Section title="No products available" subtitle="Check back soon for new arrivals!" py={8}>
+        <Box />
+      </Section>
     );
   }
 
@@ -75,7 +77,7 @@ export default function Home() {
       {/* Features Section */}
       <Section 
         title="Why Choose ShopMate?"
-        subtitle="We're committed to providing you with the best shopping experience"
+        subtitle="We&apos;re committed to providing you with the best shopping experience"
         backgroundColor={theme.palette.background.paper}
       >
         <Grid container spacing={3}>

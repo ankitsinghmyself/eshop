@@ -37,7 +37,7 @@ export default function Contact() {
           Contact Us
         </Typography>
         <Typography variant="h6" color="text.secondary">
-          We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
         </Typography>
       </Box>
 

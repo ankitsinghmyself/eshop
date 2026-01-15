@@ -5,6 +5,7 @@ import ProductCard from '../cards/ProductCard';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/utils/redux/store';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import SignInModal from '@/components/auth/SignInModal';
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Avatar,
   Box,
@@ -73,14 +73,6 @@ const ManageProduct: React.FC = () => {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    filterProducts();
-  }, [products, searchTerm, showActiveOnly]);
-
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -94,7 +86,7 @@ const ManageProduct: React.FC = () => {
     }
   };
 
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     let filtered = products;
     
     if (searchTerm) {
@@ -109,7 +101,15 @@ const ManageProduct: React.FC = () => {
     }
     
     setFilteredProducts(filtered);
-  };
+  }, [products, searchTerm, showActiveOnly]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [filterProducts]);
 
   const handleAddProduct = async () => {
     if (!name || !price || !img || !quantity) {

@@ -20,9 +20,10 @@ import SignUpModal from "./SignUpModal";
 interface SignInModalProps {
     open: boolean;
     onClose: () => void;
+    switchToSignUp?: () => void;
 }
 
-export default function SignInModal({ open, onClose }: SignInModalProps) {
+export default function SignInModal({ open, onClose, switchToSignUp }: SignInModalProps) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showSignUp, setShowSignUp] = useState(false);
@@ -86,7 +87,11 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
     };
 
     const handleSwitchToSignUp = () => {
-        setShowSignUp(true);
+        if (switchToSignUp) {
+            switchToSignUp();
+        } else {
+            setShowSignUp(true);
+        }
     };
 
     const handleSwitchToSignIn = () => {
@@ -189,7 +194,7 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
                     
                     <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                            Don't have an account?
+                            Don&apos;t have an account?
                         </Typography>
                         <Button
                             variant="outlined"

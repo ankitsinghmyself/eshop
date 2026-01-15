@@ -52,12 +52,15 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   details?: string;
   img: string;
   quantity: number;
   favorite: boolean;
   rating: number;
+  reviewCount?: number;
   published: boolean;
   authorId: string;
   isActive: boolean;
+  code?: string;
 }

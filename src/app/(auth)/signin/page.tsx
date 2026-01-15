@@ -127,7 +127,7 @@ export default function SignIn() {
 
         <Box sx={{ textAlign: 'center', mt: 3 }}>
           <Typography variant="body2" color="text.secondary">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/signup" sx={{ fontWeight: 600 }}>
               Sign up here
             </Link>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -63,6 +63,24 @@ const OrdersManagement: React.FC = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const filterOrders = useCallback(() => {
+    let filtered = orders;
+
+    if (searchTerm) {
+      filtered = filtered.filter(order =>
+        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(order => order.status === statusFilter);
+    }
+
+    setFilteredOrders(filtered);
+  }, [orders, searchTerm, statusFilter]);
+
   // Mock data - replace with actual API calls
   useEffect(() => {
     const mockOrders: Order[] = [
@@ -103,25 +121,7 @@ const OrdersManagement: React.FC = () => {
 
   useEffect(() => {
     filterOrders();
-  }, [orders, searchTerm, statusFilter]);
-
-  const filterOrders = () => {
-    let filtered = orders;
-
-    if (searchTerm) {
-      filtered = filtered.filter(order =>
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(order => order.status === statusFilter);
-    }
-
-    setFilteredOrders(filtered);
-  };
+  }, [filterOrders]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

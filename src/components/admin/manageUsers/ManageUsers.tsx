@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Box,
   Button,
@@ -68,14 +68,6 @@ const ManageUsers: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    filterUsers();
-  }, [users, searchTerm, showAdminOnly]);
-
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -88,7 +80,7 @@ const ManageUsers: React.FC = () => {
     }
   };
 
-  const filterUsers = () => {
+  const filterUsers = useCallback(() => {
     let filtered = users;
     
     if (searchTerm) {
@@ -105,7 +97,15 @@ const ManageUsers: React.FC = () => {
     }
     
     setFilteredUsers(filtered);
-  };
+  }, [users, searchTerm, showAdminOnly]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    filterUsers();
+  }, [filterUsers]);
 
   const handleAddUser = async () => {
     if (!firstName || !email || !password) {

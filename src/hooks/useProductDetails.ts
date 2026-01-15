@@ -1,21 +1,5 @@
 import { useEffect, useState } from "react";
-
-interface Product {
-  id: string;
-  name: string;
-  details: string;
-  price: number;
-  discountPercentage?: number;
-  img: string;
-  quantity: number;
-  favorite: boolean;
-  rating: number;
-  published: boolean;
-  authorId: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Product } from "@/types/types";
 
 interface UseProductDetailsResult {
   product: Product | null;
