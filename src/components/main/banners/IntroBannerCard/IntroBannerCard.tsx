@@ -4,6 +4,7 @@ import styles from "@/styles/banners/IntroBanner.module.css";
 import Image from "next/image";
 import PrimaryButton from "@/components/common/buttons/PrimaryButton";
 import AddToCart from "../../cart/AddToCart";
+import { useRouter } from "next/navigation";
 
 interface IntroBannerCardProps extends Product {}
 
@@ -13,6 +14,8 @@ const IntroBannerCard: React.FC<IntroBannerCardProps> = ({
   price,
   img,
 }) => {
+  const router = useRouter();
+
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
@@ -30,7 +33,7 @@ const IntroBannerCard: React.FC<IntroBannerCardProps> = ({
           <p className={styles.price}>₹{price.toFixed(2)}</p>
           <div className={styles.buttons}>
             <AddToCart data={{ id, name, price, img, quantity: 1 }} />
-            <PrimaryButton onClick={() => (window.location.href = `/product/${id}`)}>
+            <PrimaryButton onClick={() => router.push(`/product/${id}`)}>
               Shop Now
             </PrimaryButton>
           </div>

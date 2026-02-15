@@ -1,23 +1,19 @@
 import React from "react";
 import { useRouter } from "next/navigation";
+import Button from "@mui/material/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function BackButton() {
   const router = useRouter();
 
   return (
-    <button onClick={() => router.back()} style={styles.button}>
+    <Button
+      variant="outlined"
+      color="secondary"
+      startIcon={<ArrowBackIcon />}
+      onClick={() => router.back()}
+    >
       Back
-    </button>
+    </Button>
   );
 }
-
-const styles = {
-  button: {
-    padding: "10px 20px",
-    backgroundColor: "var(--secondary-color)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-};

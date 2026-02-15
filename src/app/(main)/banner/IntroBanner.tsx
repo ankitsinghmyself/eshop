@@ -2,8 +2,8 @@ import React from "react";
 import Slider from "react-slick";
 import { Product } from "@/types/types";
 import styles from "@/styles/banners/IntroBanner.module.css";
-import IntroBannerCard from "@/components/main/banners/IntroBannerCard";
 import ProductBannerCard from "@/components/main/banners/ProductBannerCard";
+import { useRouter } from "next/navigation";
 
 interface ProductsSliderProps {
   products: Product[];
@@ -30,6 +30,7 @@ function SamplePrevArrow(props) {
   );
 }
 const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
+  const router = useRouter();
   const settings = {
     dots: false,
     infinite: true,
@@ -43,14 +44,21 @@ const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
     autoplaySpeed: 2000,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1280,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 3,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 700,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -60,18 +68,17 @@ const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
   };
 
   return (
-    <div className={styles.sliderContainer}>
+    <div className={`${styles.sliderContainer} page-shell`}>
       <h2 className={styles.sliderHeading}>Featured Products</h2>
+      <p className={styles.sliderSubheading}>
+        Curated highlights with the same modern style as the main catalog.
+      </p>
       <Slider {...settings}>
         {products.slice(1, 8).map((product) => (
           <div key={product.id} className={styles.slickSlide}>
-            {/* <IntroBannerCard {...product} /> */}
             <ProductBannerCard
               product={product}
-              onAddToCart={() => console.log("Add to cart clicked")}
-              onShopNow={() =>
-                (window.location.href = `/product/${product.id}`)
-              }
+              onShopNow={() => router.push(`/product/${product.id}`)}
             />
           </div>
         ))}

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
-import Image from 'next/image'; // Import Next.js Image component
-import styles from './CategorySection.module.css'; // CSS module for custom styling
+import Image from 'next/image';
+import styles from './CategorySection.module.css';
+import PrimaryButton from '@/components/common/buttons/PrimaryButton';
 
 // Define the category type
 interface Category {
@@ -11,49 +12,45 @@ interface Category {
 
 // Sample category data
 const categories: Category[] = [
-  { title: 'Fruits & Veges', imgSrc: '/images/category-thumb-1.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-2.jpg' },
+  { title: 'Fresh Fruits', imgSrc: '/images/category-thumb-1.jpg' },
+  { title: 'Bakery', imgSrc: '/images/category-thumb-2.jpg' },
+  { title: 'Seafood', imgSrc: '/images/category-thumb-3.jpg' },
   { title: 'Beverages', imgSrc: '/images/category-thumb-4.jpg' },
-  { title: 'Meat Products', imgSrc: '/images/category-thumb-5.jpg' },
-  { title: 'Breads', imgSrc: '/images/category-thumb-6.jpg' },
-  { title: 'Fruits & Veges', imgSrc: '/images/category-thumb-7.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
-  { title: 'Breads & Sweets', imgSrc: '/images/category-thumb-8.jpg' },
+  { title: 'Meat', imgSrc: '/images/category-thumb-5.jpg' },
+  { title: 'Dairy', imgSrc: '/images/category-thumb-6.jpg' },
+  { title: 'Seasonal Picks', imgSrc: '/images/category-thumb-7.jpg' },
+  { title: 'Snacks', imgSrc: '/images/category-thumb-8.jpg' },
 ];
 
 const CategorySection: React.FC = () => {
   return (
     <Box py={5} className={styles.overflowHidden}>
       <Container maxWidth="xl">
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
           <Typography variant="h4" component="h2">
-            Category
+            Categories
           </Typography>
 
           <Box display="flex" alignItems="center">
-            <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+            <PrimaryButton sx={{ marginRight: 2 }}>
               View All
-            </Button>
+            </PrimaryButton>
             <Box>
-              <Button className={styles.btnYellow}>&#x276E;</Button>
-              <Button className={styles.btnYellow}>&#x276F;</Button>
+              <Button className={styles.navButton}>&#x276E;</Button>
+              <Button className={styles.navButton} sx={{ ml: 1 }}>&#x276F;</Button>
             </Box>
           </Box>
         </Box>
 
-        {/* Scrollable Categories */}
         <Box className={styles.scrollableCategories}>
           {categories.map((category, index) => (
             <Box key={index} className={styles.categoryItem}>
               <Image
-                src={category.imgSrc} // Corrected the image path
+                src={category.imgSrc}
                 alt={`${category.title} Thumbnail`}
-                width={150} // Specify width
-                height={150} // Specify height
-                className={styles.roundedImage} // Optional styling for the image
+                width={150}
+                height={150}
+                className={styles.roundedImage}
               />
               <Typography variant="h6" component="h4" mt={3} className={styles.categoryTitle}>
                 {category.title}

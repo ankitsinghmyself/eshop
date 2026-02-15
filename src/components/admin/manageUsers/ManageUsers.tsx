@@ -1,211 +1,309 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
-  Container,
   FormControlLabel,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
   TextField,
   Typography,
   Checkbox,
   Grid,
+  Paper,
+  Stack,
+  Chip,
+  Avatar,
 } from "@mui/material";
-import { getUsers, addUser, updateUser, deleteUser } from "@/lib/userService";
-import { User } from "@/types/types";
+import toast from "react-hot-toast";
+import {
+  addUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+  type AdminUser,
+} from "@/lib/userService";
+
+type UserForm = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  isAdmin: boolean;
+};
+
+const initialForm: UserForm = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  email: "",
+  password: "",
+  isAdmin: false,
+};
 
 const ManageUsers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [form, setForm] = useState<UserForm>(initialForm);
+  const [search, setSearch] = useState("");
   const [editUserId, setEditUserId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchUsers() {
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
       const fetchedUsers = await getUsers();
       setUsers(fetchedUsers);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
     }
-    fetchUsers();
+  };
+
+  useEffect(() => {
+    loadUsers();
   }, []);
 
-  const handleAddUser = async () => {
-    const newUser = await addUser({
-      firstName,
-      lastName: lastName || null,
-      middleName: null,
-      birthdate: null,
-      gender: null,
-      address: null,
-      phone: null,
-      website: null,
-      username: username || null,
-      email: email || null,
-      emailVerified: null, // Set as null for new users
-      image: null, // Set as null for new users
-      password,
-      isAdmin,
-      createdAt: new Date(), // Set the creation date
-      updatedAt: new Date(), // Set the updated date
+  const filteredUsers = useMemo(() => {
+    const key = search.trim().toLowerCase();
+    if (!key) return users;
+    return users.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName || ""}`.toLowerCase();
+      return fullName.includes(key) || (user.email || "").toLowerCase().includes(key);
     });
-    setUsers((prevUsers) => [...prevUsers, newUser]);
-    resetForm();
-  };
-
-  const handleUpdateUser = async () => {
-    if (editUserId === null) return;
-    const updatedUser = await updateUser(editUserId, {
-      firstName,
-      lastName: lastName || null,
-      middleName: null,
-      birthdate: null,
-      gender: null,
-      address: null,
-      phone: null,
-      website: null,
-      username: username || null,
-      email: email || null,
-      emailVerified: null, // Optional; handle as needed
-      image: null, // Optional; handle as needed
-      password,
-      isAdmin,
-      updatedAt: new Date(), // Set the updated date
-    });
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === editUserId ? updatedUser : user))
-    );
-    resetForm();
-  };
-
-  const handleDeleteUser = async (id: string) => {
-    await deleteUser(id);
-    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-  };
-
-  const handleEditUser = (user: User) => {
-    setEditUserId(user.id);
-    setFirstName(user.firstName);
-    setLastName(user.lastName || ""); // Handle optional last name
-    setUsername(user.username || ""); // Handle optional username
-    setEmail(user.email || ""); // Handle optional email
-    setPassword(""); // Do not pre-fill the password
-    setIsAdmin(user.isAdmin);
-  };
+  }, [users, search]);
 
   const resetForm = () => {
-    setFirstName("");
-    setLastName("");
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setIsAdmin(false);
+    setForm(initialForm);
     setEditUserId(null);
   };
 
+  const handleAddUser = async () => {
+    if (!form.firstName || !form.email || !form.password) {
+      toast.error("First name, email, and password are required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const created = await addUser({
+        firstName: form.firstName,
+        lastName: form.lastName || null,
+        username: form.username || null,
+        email: form.email || null,
+        password: form.password,
+        isAdmin: form.isAdmin,
+      });
+      setUsers((prev) => [created, ...prev]);
+      resetForm();
+      toast.success("User added");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add user");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleUpdateUser = async () => {
+    if (!editUserId || !form.firstName || !form.email) {
+      toast.error("First name and email are required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const updated = await updateUser(editUserId, {
+        firstName: form.firstName,
+        lastName: form.lastName || null,
+        username: form.username || null,
+        email: form.email || null,
+        password: form.password || undefined,
+        isAdmin: form.isAdmin,
+      });
+
+      setUsers((prev) => prev.map((user) => (user.id === editUserId ? updated : user)));
+      resetForm();
+      toast.success("User updated");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update user");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    try {
+      await deleteUser(id);
+      setUsers((prev) => prev.filter((user) => user.id !== id));
+      toast.success("User deleted");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete user");
+    }
+  };
+
+  const handleEditUser = (user: AdminUser) => {
+    setEditUserId(user.id);
+    setForm({
+      firstName: user.firstName,
+      lastName: user.lastName || "",
+      username: user.username || "",
+      email: user.email || "",
+      password: "",
+      isAdmin: user.isAdmin,
+    });
+  };
+
   return (
-    <Container>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Manage Users
+    <Box>
+      <Typography variant="h4" sx={{ fontWeight: 900, mb: 0.5 }}>
+        User Management
       </Typography>
+      <Typography color="text.secondary" sx={{ mb: 3 }}>
+        Create and maintain admin/customer accounts.
+      </Typography>
+
       <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Box
-            component="form"
-            sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}
-          >
-            <TextField
-              required
-              label="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              variant="outlined"
-            />
-            <TextField
-              label="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              variant="outlined"
-            />
-            <TextField
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              variant="outlined"
-            />
-            <TextField
-              required
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              variant="outlined"
-            />
-            <TextField
-              required
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
-              autoComplete="off"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isAdmin}
-                  onChange={(e) => setIsAdmin(e.target.checked)}
-                />
-              }
-              label="Admin"
-            />
-            {editUserId ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleUpdateUser}
-              >
-                Update User
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleAddUser}
-              >
-                Add User
-              </Button>
-            )}
-          </Box>
+        <Grid item xs={12} md={5}>
+          <Paper sx={{ p: 2.5, borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+              {editUserId ? "Edit User" : "Add User"}
+            </Typography>
+
+            <Stack spacing={1.5}>
+              <TextField
+                required
+                label="First Name"
+                value={form.firstName}
+                onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
+              />
+              <TextField
+                label="Last Name"
+                value={form.lastName}
+                onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
+              />
+              <TextField
+                label="Username"
+                value={form.username}
+                onChange={(e) => setForm((prev) => ({ ...prev, username: e.target.value }))}
+              />
+              <TextField
+                required
+                label="Email"
+                value={form.email}
+                onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+              />
+              <TextField
+                required={!editUserId}
+                label={editUserId ? "Password (leave blank to keep)" : "Password"}
+                type="password"
+                value={form.password}
+                onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
+                autoComplete="off"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={form.isAdmin}
+                    onChange={(e) => setForm((prev) => ({ ...prev, isAdmin: e.target.checked }))}
+                  />
+                }
+                label="Admin"
+              />
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={editUserId ? handleUpdateUser : handleAddUser}
+                  disabled={submitting}
+                >
+                  {submitting ? "Saving..." : editUserId ? "Update User" : "Add User"}
+                </Button>
+                {editUserId ? (
+                  <Button variant="outlined" color="secondary" onClick={resetForm}>
+                    Cancel
+                  </Button>
+                ) : null}
+              </Stack>
+            </Stack>
+          </Paper>
         </Grid>
-        <Grid item xs={6}>
-          <List>
-            {users.map((user) => (
-              <ListItem key={user.id} divider>
-                <ListItemText
-                  primary={`${user.firstName} ${user.lastName || ""}`}
-                  secondary={user.email}
-                />
-                <ListItemSecondaryAction>
-                  <Button color="primary" onClick={() => handleEditUser(user)}>
-                    Edit
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={() => handleDeleteUser(user.id)}
+
+        <Grid item xs={12} md={7}>
+          <Paper sx={{ p: 2.5, borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              justifyContent="space-between"
+              alignItems={{ xs: "stretch", sm: "center" }}
+              spacing={1.5}
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                Users ({filteredUsers.length})
+              </Typography>
+              <TextField
+                size="small"
+                label="Search users"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </Stack>
+
+            <Stack spacing={1}>
+              {loading ? (
+                <Typography color="text.secondary">Loading users...</Typography>
+              ) : filteredUsers.length === 0 ? (
+                <Typography color="text.secondary">No users found.</Typography>
+              ) : (
+                filteredUsers.map((user) => (
+                  <Paper
+                    key={user.id}
+                    variant="outlined"
+                    sx={{
+                      p: 1.5,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
                   >
-                    Delete
-                  </Button>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                      <Avatar sx={{ bgcolor: "secondary.main" }}>
+                        {(user.firstName || "U").charAt(0)}
+                      </Avatar>
+                      <Box>
+                        <Typography sx={{ fontWeight: 700 }}>
+                          {user.firstName} {user.lastName || ""}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {user.email || "No email"}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Chip
+                        size="small"
+                        label={user.isAdmin ? "Admin" : "Customer"}
+                        color={user.isAdmin ? "secondary" : "default"}
+                        variant={user.isAdmin ? "filled" : "outlined"}
+                      />
+                      <Button size="small" onClick={() => handleEditUser(user)}>
+                        Edit
+                      </Button>
+                      <Button size="small" color="error" onClick={() => handleDeleteUser(user.id)}>
+                        Delete
+                      </Button>
+                    </Box>
+                  </Paper>
+                ))
+              )}
+            </Stack>
+          </Paper>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

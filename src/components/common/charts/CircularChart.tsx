@@ -16,8 +16,8 @@ const CircularChart: React.FC<CircularChartProps> = ({ activeProducts, totalProd
     datasets: [
       {
         data: [activeProducts, totalProducts - activeProducts],
-        backgroundColor: ['#36A2EB', '#FF6384'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+        backgroundColor: ['#61a146', '#d3e3cc'],
+        hoverBackgroundColor: ['#3d692c', '#b9d2ad'],
       },
     ],
   };

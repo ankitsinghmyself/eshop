@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useTransition, useState } from "react";
+import React, { useCallback, useMemo, useState, useTransition } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/utils/redux/store";
 import {
@@ -11,15 +11,16 @@ import {
   Container,
   Typography,
   Button,
-  List,
-  ListItem,
-  ListItemText,
   Box,
-  ListItemIcon,
   LinearProgress,
   Divider,
+  Paper,
+  Stack,
+  IconButton,
 } from "@mui/material";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Image from "next/image";
 import { removeCartItem, saveCartItems } from "@/utils/redux/cart/cartThunks";
 import toast from "react-hot-toast";
@@ -32,17 +33,20 @@ const Cart: React.FC = () => {
   const totalItems = useSelector(selectTotalItems);
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated } = useAuthCheck();
-  const [loadingItems, setLoadingItems] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [loadingItems, setLoadingItems] = useState<{ [key: string]: boolean }>({});
   const [isPending, startTransition] = useTransition();
+
+  const subtotal = useMemo(
+    () => items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+    [items]
+  );
 
   const handleClearCart = async () => {
     startTransition(async () => {
       dispatch(clearCart());
       try {
         await fetch("/api/cart/clear", { method: "POST" });
-        toast.success("Cart cleared successfully!");
+        toast.success("Cart cleared successfully.");
       } catch (error) {
         console.error("Error clearing cart:", error);
         toast.error("Failed to clear cart.");
@@ -51,124 +55,125 @@ const Cart: React.FC = () => {
   };
 
   const decrementItem = useCallback(
-    async (item) => {
-      if (loadingItems[item.id]) return; // Prevent further clicks if already loading
+    async (item: (typeof items)[number]) => {
+      if (loadingItems[item.id]) return;
+      setLoadingItems((prev) => ({ ...prev, [item.id]: true }));
 
-      setLoadingItems((prev) => ({ ...prev, [item.id]: true })); // Set loading state for this item
       startTransition(async () => {
         dispatch(removeOrDecrementItem(item.id));
 
-        // If quantity is 1, remove the item entirely
         if (item.quantity <= 1) {
           await dispatch(removeCartItem(item.id));
-        } else {
-          const updatedItem = { ...item, quantity: -1 }; // Decrement by 1
-          if (isAuthenticated) {
-            await dispatch(saveCartItems([updatedItem])).unwrap();
-          }
+        } else if (isAuthenticated) {
+          await dispatch(saveCartItems([{ ...item, quantity: -1 }])).unwrap();
         }
-        setLoadingItems((prev) => ({ ...prev, [item.id]: false })); // Reset loading state for this item
+
+        setLoadingItems((prev) => ({ ...prev, [item.id]: false }));
       });
     },
     [dispatch, isAuthenticated, loadingItems]
   );
 
   const incrementItem = useCallback(
-    async (item) => {
-      if (loadingItems[item.id]) return; // Prevent further clicks if already loading
+    async (item: (typeof items)[number]) => {
+      if (loadingItems[item.id]) return;
+      setLoadingItems((prev) => ({ ...prev, [item.id]: true }));
 
-      setLoadingItems((prev) => ({ ...prev, [item.id]: true })); // Set loading state for this item
       startTransition(async () => {
         const newItem = { ...item, quantity: 1 };
         dispatch(addItem(newItem));
         if (isAuthenticated) {
           await dispatch(saveCartItems([newItem])).unwrap();
         }
-        setLoadingItems((prev) => ({ ...prev, [item.id]: false })); // Reset loading state for this item
+        setLoadingItems((prev) => ({ ...prev, [item.id]: false }));
       });
     },
     [dispatch, isAuthenticated, loadingItems]
   );
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container className="page-shell" sx={{ py: 4 }}>
+      <Typography variant="h4" sx={{ fontWeight: 800, mb: 3 }}>
         Shopping Cart ({totalItems})
       </Typography>
-      <List>
-        {items.length > 0 ? (
-          items.map((item) => (
-            <Suspense fallback={<LinearProgress />} key={item.id}>
-              {item.quantity > 0 && (
-                <ListItem>
-                  <ListItemIcon>
-                    <Image
-                      src={item.img}
-                      width={100}
-                      height={100}
-                      alt="Product"
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${item.name} - $${item.price.toFixed(2)}`}
-                    secondary={`Quantity: ${item.quantity}`}
-                  />
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => decrementItem(item)}
-                      disabled={loadingItems[item.id] || isPending} // Disable only for this item
-                    >
-                      -
-                    </Button>
-                    <Typography variant="body2" sx={{ mx: 1 }}>
-                      {item.quantity}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => incrementItem(item)}
-                      disabled={loadingItems[item.id] || isPending} // Disable only for this item
-                    >
-                      +
-                    </Button>
-                  </Box>
-                </ListItem>
-              )}
-              <Divider />
-            </Suspense>
-          ))
-        ) : (
-          <Typography variant="body1" sx={{ mt: 2 }}>
+
+      {items.length === 0 ? (
+        <Paper sx={{ p: 4, textAlign: "center" }}>
+          <Typography variant="body1" sx={{ mb: 2 }}>
             Your cart is empty.
           </Typography>
-        )}
-      </List>
-      {items.length === 0 ? (
-        <>
-          <PrimaryButton>
-            <Link href="/">Continue Shopping</Link>
+          <PrimaryButton component={Link} href="/">
+            Continue Shopping
           </PrimaryButton>
-        </>
+        </Paper>
       ) : (
-        <Box sx={{ mt: 2 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleClearCart}
-          >
-            Clear Cart
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ ml: 2 }}
-            startIcon={<AddShoppingCartIcon />}
-            onClick={() => (window.location.href = "/checkout")}
-          >
-            Checkout
-          </Button>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
+            gap: 2,
+          }}
+        >
+          <Paper sx={{ p: 2 }}>
+            <Stack divider={<Divider />} spacing={1}>
+              {items.map((item) => (
+                <Box key={item.id} sx={{ py: 1.5 }}>
+                  {loadingItems[item.id] && <LinearProgress sx={{ mb: 1 }} />}
+                  <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                    <Image src={item.img} width={90} height={90} alt={item.name} />
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography sx={{ fontWeight: 700 }}>{item.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        ₹{item.price.toFixed(2)} each
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <IconButton
+                        onClick={() => decrementItem(item)}
+                        disabled={loadingItems[item.id] || isPending}
+                        size="small"
+                        color="secondary"
+                      >
+                        {item.quantity <= 1 ? <DeleteOutlineIcon /> : <RemoveIcon />}
+                      </IconButton>
+                      <Typography sx={{ minWidth: 24, textAlign: "center" }}>
+                        {item.quantity}
+                      </Typography>
+                      <IconButton
+                        onClick={() => incrementItem(item)}
+                        disabled={loadingItems[item.id] || isPending}
+                        size="small"
+                        color="secondary"
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
+
+          <Paper sx={{ p: 2, height: "fit-content" }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+              Order Summary
+            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+              <Typography color="text.secondary">Items</Typography>
+              <Typography>{totalItems}</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography color="text.secondary">Subtotal</Typography>
+              <Typography sx={{ fontWeight: 700 }}>₹{subtotal.toFixed(2)}</Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }} />
+            <PrimaryButton component={Link} href="/checkout" fullWidth sx={{ mb: 1.5 }}>
+              Checkout
+            </PrimaryButton>
+            <Button variant="outlined" color="secondary" fullWidth onClick={handleClearCart}>
+              Clear Cart
+            </Button>
+          </Paper>
         </Box>
       )}
     </Container>

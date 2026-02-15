@@ -7,18 +7,15 @@ interface Product {
   name: string;
   price: number;
   img: string;
-  // any other fields if needed
 }
 
 interface ProductBannerCardProps {
   product: Product;
-  onAddToCart: () => void;
   onShopNow?: () => void;
 }
 
 const ProductBannerCard: React.FC<ProductBannerCardProps> = ({
   product,
-  onAddToCart,
   onShopNow,
 }) => {
   return (
@@ -35,19 +32,16 @@ const ProductBannerCard: React.FC<ProductBannerCardProps> = ({
       </div>
 
       <div className={styles.info}>
+        <p className={styles["product-tag"]}>Featured</p>
         <h2 className={styles["product-name"]}>{product.name}</h2>
-        <p className={styles["product-price"]}>₹{product.price.toFixed(2)}</p>
+        <p className={styles["product-price"]}>
+          {"\u20B9"}
+          {product.price.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+        </p>
         <div className={styles.actions}>
-          <button
-            className={`${styles.btn} ${styles["btn-primary"]}`}
-            onClick={onAddToCart}
-            aria-label={`Add ${product.name} to cart`}
-          >
-            Add to Cart
-          </button>
           {onShopNow && (
             <button
-              className={`${styles.btn} ${styles["btn-outline"]}`}
+              className={`${styles.btn} ${styles["btn-primary"]}`}
               onClick={onShopNow}
               aria-label={`Shop now for ${product.name}`}
             >

@@ -19,6 +19,7 @@ export default async function RootLayout({
           <div
             style={{
               background: "var(--primary-glow)",
+              minHeight: "100vh",
             }}
           >
             {children}

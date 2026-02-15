@@ -14,28 +14,54 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   const theme = useMemo(
     () =>
       createTheme({
+        shape: {
+          borderRadius: 10,
+        },
         palette: {
           mode: darkMode ? "dark" : "light",
           primary: {
-            main: "#fff",
+            main: "#61a146",
+            contrastText: "#ffffff",
           },
           secondary: {
-            main: "#61a146",
+            main: "#3d692c",
           },
           background: {
-            default: darkMode ? "#121212" : "#f5f5f5",
+            default: darkMode ? "#0f1710" : "#f4f8f2",
+            paper: darkMode ? "#1a251b" : "#ffffff",
           },
           text: {
-            primary: darkMode ? "#ffffff" : "#333333",
-            secondary: "#999999",
+            primary: darkMode ? "#eaf4e6" : "#1c2b18",
+            secondary: darkMode ? "#b5c6ae" : "#4d6047",
           },
           action: {
-            disabledBackground: "#f5f5f5",
+            disabledBackground: darkMode ? "#233526" : "#d8e7d1",
           },
-          divider: "#e5e5e5",
+          divider: darkMode ? "#2f4232" : "#d3e3cc",
         },
         typography: {
           fontFamily: "Lato, sans-serif",
+          button: {
+            textTransform: "none",
+            fontWeight: 700,
+          },
+        },
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 999,
+                paddingInline: 18,
+              },
+            },
+          },
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                borderRadius: 14,
+              },
+            },
+          },
         },
       }),
     [darkMode]

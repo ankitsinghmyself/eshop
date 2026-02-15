@@ -1,29 +1,38 @@
 import React from "react";
-import { Box, Typography, Link } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 
 const Footer: React.FC = () => {
   return (
     <Box
       component="footer"
       sx={{
-        py: 3,
+        py: { xs: 3, md: 3.5 },
         px: 2,
         mt: "auto",
-        background: "var(--primary-gradient)",
+        borderTop: "1px solid",
+        borderColor: "divider",
+        background:
+          "linear-gradient(180deg, rgba(247,251,244,0.95) 0%, rgba(234,243,229,0.95) 100%)",
       }}
-      color={(theme) => (theme.palette.mode === "light" ? "black" : "white")}
+      color="text.primary"
     >
-      <Typography variant="body1" align="center">
-        © {new Date().getFullYear()} eshop. All rights reserved.
-      </Typography>
-      <Box sx={{ textAlign: "center", mt: 1 }}>
-        <Link
-          href="https://ankitsinghmyself.vercel.app/"
-          color="inherit"
-          sx={{ mx: 1 }}
-        >
-          Developed and Designed by Ankit
-        </Link>
+      <Box className="page-shell" sx={{ textAlign: "center" }}>
+        <Typography variant="body1" sx={{ fontWeight: 700 }}>
+          {"\u00A9"} {new Date().getFullYear()} eShop. All rights reserved.
+        </Typography>
+        <Box sx={{ mt: 1 }}>
+          <Link
+            href="https://ankitsinghmyself.vercel.app/"
+            color="inherit"
+            sx={{
+              mx: 1,
+              textDecorationColor: "transparent",
+              "&:hover": { textDecorationColor: "currentColor" },
+            }}
+          >
+            Developed and Designed by Ankit
+          </Link>
+        </Box>
       </Box>
     </Box>
   );

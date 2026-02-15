@@ -1,6 +1,7 @@
 //app/app.tsx
 "use client";
 
+import { useCallback } from "react";
 import IntroBanner from "./banner/IntroBanner";
 import useFetchProducts from "@/hooks/useFetchProducts";
 import LoadingSpinner from "@/components/common/loaders/LoadingSpinner";
@@ -9,6 +10,10 @@ import ProductsList from "@/components/main/products/ProductsList";
 import ShopIntroBanner from "@/components/main/banners/ShopIntroBanner";
 export default function Home() {
   const { products, loading, error } = useFetchProducts();
+  const handleShopNow = useCallback(() => {
+    const section = document.getElementById("products");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -24,7 +29,7 @@ export default function Home() {
 
   return (
     <>
-      <ShopIntroBanner onShopNowClick={() => console.log("Shop Now clicked")} />
+      <ShopIntroBanner onShopNowClick={handleShopNow} />
       <IntroBanner products={products} />
       <ProductsList products={products} />
       <CategorySection />

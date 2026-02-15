@@ -1,18 +1,20 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 
-export default function PrimaryButton(props) {
+export default function PrimaryButton(props: ButtonProps) {
   return (
-    <Button variant="contained" sx={{
+    <Button
+      variant="contained"
+      sx={{
         color: "#fff",
-        textTransform: "uppercase",
-        backgroundColor: "var(--secondary-color)",
-        borderColor: "var(--primary-color)",
+        textTransform: "none",
+        background: "var(--secondary-gradient)",
         "&:hover": {
-          backgroundColor: "var(--secondary-color)",
-          borderColor: "var(--primary-color)",
+          background: "linear-gradient(120deg, #3d692c 0%, #61a146 100%)",
         },
-      }} {...props}>
+      }}
+      {...props}
+    >
       {props.children}
     </Button>
   );
