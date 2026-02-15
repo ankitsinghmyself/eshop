@@ -8,9 +8,9 @@ import PrimaryButton from '@/components/common/buttons/PrimaryButton';
 interface Category {
   title: string;
   imgSrc: string;
+  count?: number;
 }
 
-// Sample category data
 const categories: Category[] = [
   { title: 'Fresh Fruits', imgSrc: '/images/category-thumb-1.jpg' },
   { title: 'Bakery', imgSrc: '/images/category-thumb-2.jpg' },
@@ -23,6 +23,8 @@ const categories: Category[] = [
 ];
 
 const CategorySection: React.FC = () => {
+  const theme = useTheme();
+
   return (
     <Box py={5} className={styles.overflowHidden}>
       <Container maxWidth="xl">

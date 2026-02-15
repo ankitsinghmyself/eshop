@@ -43,6 +43,7 @@ export interface User {
   emailVerified?: Date | null; // Optional
   image?: string | null; // Optional
   isAdmin: boolean;
+  isSuperAdmin?: boolean; // Optional super admin flag
   password: string; // Required for creation
   createdAt?: Date; // Optional, usually set in the backend
   updatedAt?: Date; // Optional, usually set in the backend
@@ -51,12 +52,15 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   details?: string;
   img: string;
   quantity: number;
   favorite: boolean;
   rating: number;
+  reviewCount?: number;
   published: boolean;
   authorId: string;
   isActive: boolean;
+  code?: string;
 }

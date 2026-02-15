@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -10,8 +10,7 @@ import {
   IconButton,
   DialogTitle,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import toast from "react-hot-toast";
+import { Close, PersonAdd, Login, Storefront } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import PrimaryButton from "../common/buttons/PrimaryButton";

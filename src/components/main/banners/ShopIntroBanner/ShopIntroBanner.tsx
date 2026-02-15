@@ -7,6 +7,9 @@ type ShopIntroBannerProps = {
 };
 
 const ShopIntroBanner: React.FC<ShopIntroBannerProps> = ({ onShopNowClick }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <section className={`${styles.banner} page-shell`}>
       <div className={styles.content}>

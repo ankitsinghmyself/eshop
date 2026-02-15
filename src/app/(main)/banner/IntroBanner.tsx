@@ -8,27 +8,7 @@ import { useRouter } from "next/navigation";
 interface ProductsSliderProps {
   products: Product[];
 }
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "none" }}
-      onClick={onClick}
-    />
-  );
-}
 
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "none" }}
-      onClick={onClick}
-    />
-  );
-}
 const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
   const router = useRouter();
   const settings = {

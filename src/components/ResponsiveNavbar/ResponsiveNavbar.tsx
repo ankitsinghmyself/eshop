@@ -47,6 +47,9 @@ const ResponsiveNavbar: React.FC<Props> = ({ darkMode, setDarkMode }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openSignIn, setOpenSignIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const { isAuthenticated, userData } = useAuthCheck();
   const { handleLogout } = useLogout();
@@ -67,6 +70,22 @@ const ResponsiveNavbar: React.FC<Props> = ({ darkMode, setDarkMode }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSearch = async (query: string) => {
+    if (query.length > 2) {
+      try {
+        const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        setSearchResults(data.products || []);
+        setShowSearchResults(true);
+      } catch (error) {
+        console.error('Search error:', error);
+      }
+    } else {
+      setSearchResults([]);
+      setShowSearchResults(false);
+    }
   };
 
   useEffect(() => {
@@ -274,7 +293,6 @@ const ResponsiveNavbar: React.FC<Props> = ({ darkMode, setDarkMode }) => {
                   Login / Register
                 </MenuItem>
               )}
-            </Menu>
 
             {isMobile && (
               <IconButton

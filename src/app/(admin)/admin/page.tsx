@@ -31,6 +31,7 @@ export default function AdminPage() {
   const [selectedItem, setSelectedItem] = useState<AdminSection>("Dashboard");
   const { handleLogout, loading } = useLogout();
 
+
   useEffect(() => {
     const savedItem = localStorage.getItem("selectedAdminPage") as AdminSection | null;
     if (savedItem && ["Dashboard", "Users", "ManageProducts"].includes(savedItem)) {

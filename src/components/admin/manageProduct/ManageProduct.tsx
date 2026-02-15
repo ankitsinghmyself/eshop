@@ -12,6 +12,17 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
+import {
+  Add,
+  Edit,
+  Delete,
+  Search,
+  FilterList,
+  Visibility,
+  VisibilityOff,
+  Refresh,
+  CloudUpload
+} from "@mui/icons-material";
 import toast from "react-hot-toast";
 
 interface Product {

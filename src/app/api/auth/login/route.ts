@@ -11,6 +11,7 @@ interface UserWithAdmin {
   email: string;
   password: string;
   isAdmin: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export async function POST(req: NextRequest) {
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
         id: typedUser.id,
         email: typedUser.email,
         isAdmin: typedUser.isAdmin,
+        isSuperAdmin: typedUser.isSuperAdmin || false,
       },
       SECRET_KEY,
       { expiresIn: "1h" }

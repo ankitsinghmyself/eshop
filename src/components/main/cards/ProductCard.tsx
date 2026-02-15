@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   alpha,
   Box,
@@ -19,16 +19,10 @@ import AddToCart from "../cart/AddToCart";
 import Link from "next/link";
 
 interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number;
-  discountPercentage?: number;
-  details?: string;
-  img: string;
-  favorite: boolean;
-  rating: number;
-  published: boolean;
-  authorId: string;
+  product: Product;
+  onAddToCart?: (product: Product) => void;
+  onToggleFavorite?: (productId: string) => void;
+  isFavorite?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({

@@ -31,6 +31,8 @@ interface SidebarProps {
 
 export default function Sidebar({ selectedItem, onSelect }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState('Dashboard');
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
