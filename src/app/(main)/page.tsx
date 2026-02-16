@@ -35,6 +35,7 @@ const features = [
 ];
 
 export default function Home() {
+  const theme = useTheme();
   const { products, loading, error } = useFetchProducts();
   const handleShopNow = useCallback(() => {
     const section = document.getElementById("products");

@@ -293,6 +293,7 @@ const ResponsiveNavbar: React.FC<Props> = ({ darkMode, setDarkMode }) => {
                   Login / Register
                 </MenuItem>
               )}
+            </Menu>
 
             {isMobile && (
               <IconButton

@@ -23,8 +23,6 @@ const categories: Category[] = [
 ];
 
 const CategorySection: React.FC = () => {
-  const theme = useTheme();
-
   return (
     <Box py={5} className={styles.overflowHidden}>
       <Container maxWidth="xl">

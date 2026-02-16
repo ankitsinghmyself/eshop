@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Slider from "react-slick";
 import { Product } from "@/types/types";
@@ -17,8 +19,6 @@ const ProductsSlider: React.FC<ProductsSliderProps> = ({ products }) => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
     autoplay: true,
 
     autoplaySpeed: 2000,

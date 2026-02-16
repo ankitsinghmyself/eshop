@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Providers from "../providers";
 
@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description: "Discover quality products at great prices. Shop electronics, fashion, home goods and more at ShopMate.",
   keywords: "ecommerce, shopping, online store, products, deals",
   authors: [{ name: "Ankit Singh" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default async function RootLayout({

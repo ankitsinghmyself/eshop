@@ -4,10 +4,10 @@ import Footer from "@/components/common/Footer";
 import ResponsiveNavbar from "@/components/ResponsiveNavbar";
 import store from "@/utils/redux/store";
 import { ThemeProvider, CssBaseline } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import React, { useState, useMemo, useEffect } from "react";
-import { createAppTheme } from "@/theme";
+import React, { useState, useMemo } from "react";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const [darkMode, setDarkMode] = useState(false);

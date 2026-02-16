@@ -158,7 +158,6 @@ const AdminDashboard: React.FC<DashboardProps> = ({ onSelect }) => {
         </Grid>
       </Grid>
     </Box>
-    </Box>
   );
 };
 

@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Close, Login, PersonAdd, Storefront } from "@mui/icons-material";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import SignUpModal from "./SignUpModal";
@@ -92,7 +93,7 @@ export default function SignInModal({ open, onClose }: SignInModalProps) {
               Sign In
             </Typography>
             <IconButton onClick={onClose} size="small" sx={{ color: "#fff" }}>
-              <CloseIcon />
+              <Close />
             </IconButton>
           </Box>
         </DialogTitle>
