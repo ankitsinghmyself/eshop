@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Container } from '@mui/material';
 import { Product } from '@/types/types';
 import ProductCard from '../cards/ProductCard';
 import { useDispatch } from 'react-redux';

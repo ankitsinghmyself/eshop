@@ -156,30 +156,6 @@ const ManageUsers: React.FC = () => {
     });
   };
 
-  const openAddDialog = () => {
-    resetForm();
-    setOpenDialog(true);
-  };
-
-  const confirmDelete = (id: string) => {
-    setUserToDelete(id);
-    setDeleteConfirmOpen(true);
-  };
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const paginatedUsers = filteredUsers.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   return (
     <Box>
       <Typography variant="h4" sx={{ fontWeight: 900, mb: 0.5 }}>

@@ -52,6 +52,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  discountPercentage?: number;
   originalPrice?: number;
   details?: string;
   img: string;

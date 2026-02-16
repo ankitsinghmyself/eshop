@@ -23,7 +23,6 @@ export default function AuthModalManager({ open, onClose }: AuthModalManagerProp
         <SignInModal
           open={open}
           onClose={handleClose}
-          switchToSignUp={() => setView("signUp")}
         />
       )}
       {view === "signUp" && (

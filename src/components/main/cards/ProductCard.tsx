@@ -17,13 +17,9 @@ import StarIcon from "@mui/icons-material/Star";
 import { calculateDiscountedPrice } from "@/utils/priceUtils";
 import AddToCart from "../cart/AddToCart";
 import Link from "next/link";
+import type { Product } from "@/types/types";
 
-interface ProductCardProps {
-  product: Product;
-  onAddToCart?: (product: Product) => void;
-  onToggleFavorite?: (productId: string) => void;
-  isFavorite?: boolean;
-}
+type ProductCardProps = Product;
 
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
@@ -36,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
 }) => {
   const discountValue = discountPercentage ?? 0;
-  const discounted = calculateDiscountedPrice(price, discountPercentage).discountedPrice;
+  const discounted = calculateDiscountedPrice(price, discountValue).discountedPrice;
   const hasDiscount = discountValue > 0 && discounted < price;
   const safeRating = rating || 4.5;
 
